@@ -69,4 +69,4 @@ The following targets are currently supported (italics are new in v2.0):
 - Sweet.Jayson (detection)
 - *XmlSerializer (detection, RCE)*
 
-Released under agpl-3.0, see LICENSE for more informatio
+Released under agpl-3.0, see LICENSE for more information
