@@ -19,6 +19,7 @@ import java.net.URL;
  * 
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
+@Deprecated
 public class FreddyIssue implements IScanIssue {
 	private final String _name;
 	private final URL _url;

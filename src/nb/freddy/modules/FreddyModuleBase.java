@@ -8,13 +8,8 @@
 
 package nb.freddy.modules;
 
-import burp.IBurpCollaboratorClientContext;
-import burp.IBurpCollaboratorInteraction;
-import burp.IBurpExtenderCallbacks;
-import burp.IExtensionHelpers;
-import burp.IHttpRequestResponse;
-import burp.IScanIssue;
-import burp.IScannerInsertionPoint;
+import burp.*;
+
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -1118,5 +1113,13 @@ public abstract class FreddyModuleBase {
 					_callbacks.applyMarkers(record.getNewRequestResponse(), record.getRequestMarkers(), null)
 				}
 		);
+	}
+
+	public ArrayList<ExceptionPayload> getErrorBasedPayloads() {
+		return _exceptionBasedPayloads;
+	}
+
+	public ArrayList<byte[]> getRCEPayloads(IIntruderAttack attack) {
+		return null;
 	}
 }

@@ -18,6 +18,9 @@ import burp.IScannerCheck;
 import burp.IScannerInsertionPoint;
 import java.util.ArrayList;
 import java.util.List;
+
+import nb.freddy.intruder.ErrorPayloadGeneratorFactory;
+import nb.freddy.intruder.RCEPayloadGeneratorFactory;
 import nb.freddy.modules.FreddyModuleBase;
 import nb.freddy.modules.dotnet.BinaryFormatterModule;
 import nb.freddy.modules.dotnet.DataContractJsonSerializerModule;
@@ -346,8 +349,8 @@ public class Freddy implements IScannerCheck, IExtensionStateListener {
 		}
 		
 		//Register payload generator factories
-//		_callbacks.registerIntruderPayloadGeneratorFactory(new ErrorPayloadGeneratorFactory(_modules));
-//		_callbacks.registerIntruderPayloadGeneratorFactory(new RCEPayloadGeneratorFactory(_modules));
+		_callbacks.registerIntruderPayloadGeneratorFactory(new ErrorPayloadGeneratorFactory(_modules));
+		_callbacks.registerIntruderPayloadGeneratorFactory(new RCEPayloadGeneratorFactory(_modules));
 		
 		//Start the Collaborator polling thread
 		_freddyCollaborator = new FreddyCollaboratorThread(_collabContext, _modules);
@@ -477,7 +480,7 @@ public class Freddy implements IScannerCheck, IExtensionStateListener {
 	 * Map an issue confidence to an integer value where higher values
 	 * represent greater confidence.
 	 * 
-	 * @param confidence The issue confidence string.
+	 * @param issue The Burp issue containing the confidence level..
 	 * @return An integer representation of the confidence value.
 	 ******************/
 	private int confidenceValue(IScanIssue issue) {
@@ -494,7 +497,7 @@ public class Freddy implements IScannerCheck, IExtensionStateListener {
 	 * Map an issue severity to an integer value where higher values represent
 	 * greater severity.
 	 * 
-	 * @param severity The issue severity string.
+	 * @param issue The Burp issue containing the severity level.
 	 * @return An integer representation of the severity value.
 	 ******************/
 	private int severityValue(IScanIssue issue) {

@@ -29,6 +29,7 @@ import nb.freddy.FreddyIssue;
  * 
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
+@Deprecated
 public abstract class FreddyModule {
 	/*******************
 	 * Constants

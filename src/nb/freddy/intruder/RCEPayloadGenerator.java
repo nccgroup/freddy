@@ -13,6 +13,7 @@ import burp.IIntruderPayloadGenerator;
 import java.util.ArrayList;
 import java.util.List;
 import nb.freddy.modules.FreddyModule;
+import nb.freddy.modules.FreddyModuleBase;
 
 /***********************************************************
  * Burp Intruder payload generator which generates payloads
@@ -39,12 +40,12 @@ public class RCEPayloadGenerator implements IIntruderPayloadGenerator {
 	 * 
 	 * @param modules A list of loaded Freddy modules.
 	 ******************/
-	public RCEPayloadGenerator(ArrayList<FreddyModule> modules, IIntruderAttack attack) {
+	public RCEPayloadGenerator(ArrayList<FreddyModuleBase> modules, IIntruderAttack attack) {
 		List<byte[]> modPayloads;
 		
 		//Generate a list of all RCE detection payloads
 		_payloads = new ArrayList<byte[]>();
-		for(FreddyModule module: modules) {
+		for(FreddyModuleBase module: modules) {
 			modPayloads = module.getRCEPayloads(attack);
 			if(modPayloads != null) {
 				_payloads.addAll(modPayloads);

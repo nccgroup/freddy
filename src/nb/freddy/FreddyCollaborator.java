@@ -19,6 +19,7 @@ import nb.freddy.modules.FreddyModule;
  * 
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
+@Deprecated
 public class FreddyCollaborator extends Thread {
 	/*******************
 	 * Constants

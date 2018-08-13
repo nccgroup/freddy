@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group 'trust.nccgroup'
+version '0.1-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+// deviates from standard Gradle directory structure
+sourceSets.main.java.srcDirs = ['src']
+
+
+dependencies {
+    implementation 'net.portswigger.burp.extender:burp-extender-api:1.7.22'
+    testCompile 'junit:junit:4.12'
+}
+
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}

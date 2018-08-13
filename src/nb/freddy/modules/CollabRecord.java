@@ -19,6 +19,7 @@ import burp.IHttpService;
  * 
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
+@Deprecated
 public class CollabRecord {
 	/*******************
 	 * Properties

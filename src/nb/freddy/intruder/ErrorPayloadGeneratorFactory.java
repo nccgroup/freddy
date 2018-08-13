@@ -13,6 +13,7 @@ import burp.IIntruderPayloadGenerator;
 import burp.IIntruderPayloadGeneratorFactory;
 import java.util.ArrayList;
 import nb.freddy.modules.FreddyModule;
+import nb.freddy.modules.FreddyModuleBase;
 
 /***********************************************************
  * Burp Intruder payload generator factory for Freddy
@@ -26,14 +27,14 @@ public class ErrorPayloadGeneratorFactory implements IIntruderPayloadGeneratorFa
 	/*******************
 	 * Properties
 	 ******************/
-	private ArrayList<FreddyModule> _modules;
+	private ArrayList<FreddyModuleBase> _modules;
 	
 	/*******************
 	 * Initialise the payload generator factory.
 	 * 
 	 * @param modules A list of loaded Freddy modules to retrieve payloads from.
 	 ******************/
-	public ErrorPayloadGeneratorFactory(ArrayList<FreddyModule> modules) {
+	public ErrorPayloadGeneratorFactory(ArrayList<FreddyModuleBase> modules) {
 		_modules = modules;
 	}
 	
