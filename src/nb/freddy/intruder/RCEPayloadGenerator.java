@@ -12,8 +12,9 @@ import burp.IIntruderAttack;
 import burp.IIntruderPayloadGenerator;
 import java.util.ArrayList;
 import java.util.List;
-import nb.freddy.modules.FreddyModule;
+
 import nb.freddy.modules.FreddyModuleBase;
+import nb.freddy.modules.Payload;
 
 /***********************************************************
  * Burp Intruder payload generator which generates payloads
@@ -32,7 +33,7 @@ public class RCEPayloadGenerator implements IIntruderPayloadGenerator {
 	/*******************
 	 * Properties
 	 ******************/
-	private ArrayList<byte[]> _payloads;
+	private ArrayList<Payload> _payloads;
 	private int _currentIndex;
 	
 	/*******************
@@ -41,10 +42,10 @@ public class RCEPayloadGenerator implements IIntruderPayloadGenerator {
 	 * @param modules A list of loaded Freddy modules.
 	 ******************/
 	public RCEPayloadGenerator(ArrayList<FreddyModuleBase> modules, IIntruderAttack attack) {
-		List<byte[]> modPayloads;
+		List<Payload> modPayloads;
 		
 		//Generate a list of all RCE detection payloads
-		_payloads = new ArrayList<byte[]>();
+		_payloads = new ArrayList<>();
 		for(FreddyModuleBase module: modules) {
 			modPayloads = module.getRCEPayloads(attack);
 			if(modPayloads != null) {
@@ -72,9 +73,9 @@ public class RCEPayloadGenerator implements IIntruderPayloadGenerator {
 	 * @return The bytes of the next payload.
 	 ******************/
 	public byte[] getNextPayload(byte[] baseValue) {
-		byte [] payload = _payloads.get(_currentIndex);
+		Payload payload = _payloads.get(_currentIndex);
 		_currentIndex += 1;
-		return payload;
+		return payload.getPayloadBytes();
 	}
 	
 	/*******************

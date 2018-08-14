@@ -2,23 +2,46 @@ plugins {
     id 'java'
 }
 
-group 'trust.nccgroup'
-version '0.1-SNAPSHOT'
-
-sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
 }
-
-// deviates from standard Gradle directory structure
-sourceSets.main.java.srcDirs = ['src']
-
 
 dependencies {
     implementation 'net.portswigger.burp.extender:burp-extender-api:1.7.22'
     testCompile 'junit:junit:4.12'
 }
+
+def getVersionName = { ->
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--tags', '--abbrev=0'
+            standardOutput = stdout
+        }
+        def tag = stdout.toString().trim()
+        stdout.reset()
+        exec {
+            commandLine 'git', 'describe', '--all'
+            standardOutput = stdout
+        }
+        if ('heads/master'.equalsIgnoreCase(stdout.toString().trim()) || stdout.toString().trim().contains(tag)) {
+            return tag
+        } else {
+            // Adding the branch name to the version
+            def ver = stdout.toString().trim()
+            return tag+'-' + ver.substring(ver.indexOf('/')+1)
+        }
+    }
+    catch (ignored) {
+        return null
+    }
+}
+sourceCompatibility = 1.8
+// deviates from standard Gradle directory structure
+sourceSets.main.java.srcDirs = ['src']
+
+version = getVersionName()
+group 'trust.nccgroup'
 
 jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
