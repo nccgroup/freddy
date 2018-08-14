@@ -17,9 +17,8 @@ import java.util.regex.Pattern;
  * 
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
-public class ExceptionPayload {
-	//Payload data
-	private final byte[] _payloadBytes;
+public class ExceptionPayload extends Payload {
+
 	
 	//Exception-based success indicator
 	private final ScanIndicator _indicator;
@@ -45,15 +44,7 @@ public class ExceptionPayload {
 		_payloadBytes = payloadBytes;
 		_indicator = new ScanIndicator(successIndicator);
 	}
-	
-	/*******************
-	 * Get the payload bybts.
-	 * 
-	 * @return The payload bytes.
-	 ******************/
-	public byte[] getPayloadBytes() {
-		return _payloadBytes;
-	}
+
 	
 	/*******************
 	 * Search for the success indicator in a HTTP response string.

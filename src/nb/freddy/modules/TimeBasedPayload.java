@@ -13,9 +13,8 @@ package nb.freddy.modules;
  * 
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
-public class TimeBasedPayload {
-	//Payload data
-	private final byte[] _payloadBytes;
+public class TimeBasedPayload extends Payload {
+
 	private final long _delay;
 	
 	/*******************
@@ -28,15 +27,7 @@ public class TimeBasedPayload {
 		_payloadBytes = payloadBytes;
 		_delay = delay;
 	}
-	
-	/*******************
-	 * Get the payload bytes.
-	 * 
-	 * @return The payload bytes.
-	 ******************/
-	public byte[] getPayloadBytes() {
-		return _payloadBytes;
-	}
+
 	
 	/*******************
 	 * Get the length of the time delay induced by this payload.

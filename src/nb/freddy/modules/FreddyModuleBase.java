@@ -104,20 +104,20 @@ public abstract class FreddyModuleBase {
 		_callbacks = null;
 		_helpers = null;
 		_collabContext = null;
-		_collabRecords = new ArrayList<CollaboratorRecord>();
+		_collabRecords = new ArrayList<>();
 		_targetName = null;
 		_targetPlatform = null;
 		_rceCapable = false;
 		_descriptionCaveats = null;
 		_remediationDetail = null;
 		_severity = null;
-		_passiveReqIndicators = new ArrayList<ScanIndicator>();
-		_passiveResIndicators = new ArrayList<ScanIndicator>();
-		_passiveReqFPIndicators = new ArrayList<ScanIndicator>();
-		_passiveResFPIndicators = new ArrayList<ScanIndicator>();
-		_exceptionBasedPayloads = new ArrayList<ExceptionPayload>();
-		_timeBasedPayloads = new ArrayList<TimeBasedPayload>();
-		_collaboratorPayloads = new ArrayList<CollaboratorPayload>();
+		_passiveReqIndicators = new ArrayList<>();
+		_passiveResIndicators = new ArrayList<>();
+		_passiveReqFPIndicators = new ArrayList<>();
+		_passiveResFPIndicators = new ArrayList<>();
+		_exceptionBasedPayloads = new ArrayList<>();
+		_timeBasedPayloads = new ArrayList<>();
+		_collaboratorPayloads = new ArrayList<>();
 	}
 	
 	/*******************
@@ -481,11 +481,11 @@ public abstract class FreddyModuleBase {
 		//Decode prefix/suffix and create a buffer for the final payload
 		prefixBytes = _helpers.base64Decode(prefixB64);
 		suffixBytes = _helpers.base64Decode(suffixB64);
-		payload = new byte[prefixBytes.length + suffixBytes.length + (unicode == true ? BIN_PAYLOAD_CMD_BUFFER_SIZE * 2 : BIN_PAYLOAD_CMD_BUFFER_SIZE)];
+		payload = new byte[prefixBytes.length + suffixBytes.length + (unicode  ? BIN_PAYLOAD_CMD_BUFFER_SIZE * 2 : BIN_PAYLOAD_CMD_BUFFER_SIZE)];
 		
 		//Build and return the buffer
 		for(i = 0; i < prefixBytes.length; ++i) { payload[payloadOffset] = prefixBytes[i]; payloadOffset += 1;  }
-		for(i = 0; i < BIN_PAYLOAD_CMD_BUFFER_SIZE; ++i) { payload[payloadOffset] = 0x20; payloadOffset += 1; if(unicode == true) { payload[payloadOffset] = 0x00; payloadOffset += 1; } }
+		for(i = 0; i < BIN_PAYLOAD_CMD_BUFFER_SIZE; ++i) { payload[payloadOffset] = 0x20; payloadOffset += 1; if(unicode) { payload[payloadOffset] = 0x00; payloadOffset += 1; } }
 		for(i = 0; i < suffixBytes.length; ++i) { payload[payloadOffset] = suffixBytes[i]; payloadOffset += 1; }
 		return payload;
 	}
@@ -511,13 +511,13 @@ public abstract class FreddyModuleBase {
 		prefixBytes = _helpers.base64Decode(prefixB64);
 		middleBytes = _helpers.base64Decode(midB64);
 		suffixBytes = _helpers.base64Decode(suffixB64);
-		payload = new byte[prefixBytes.length + middleBytes.length + suffixBytes.length + (unicode == true ? BIN_PAYLOAD_CMD_BUFFER_SIZE * 4 : BIN_PAYLOAD_CMD_BUFFER_SIZE * 2)];
+		payload = new byte[prefixBytes.length + middleBytes.length + suffixBytes.length + (unicode ? BIN_PAYLOAD_CMD_BUFFER_SIZE * 4 : BIN_PAYLOAD_CMD_BUFFER_SIZE * 2)];
 		
 		//Build and return the buffer
 		for(i = 0; i < prefixBytes.length; ++i) { payload[payloadOffset] = prefixBytes[i]; payloadOffset += 1;  }
-		for(i = 0; i < BIN_PAYLOAD_CMD_BUFFER_SIZE; ++i) { payload[payloadOffset] = 0x20; payloadOffset += 1; if(unicode == true) { payload[payloadOffset] = 0x00; payloadOffset += 1; } }
+		for(i = 0; i < BIN_PAYLOAD_CMD_BUFFER_SIZE; ++i) { payload[payloadOffset] = 0x20; payloadOffset += 1; if(unicode) { payload[payloadOffset] = 0x00; payloadOffset += 1; } }
 		for(i = 0; i < middleBytes.length; ++i) { payload[payloadOffset] = middleBytes[i]; payloadOffset += 1; }
-		for(i = 0; i < BIN_PAYLOAD_CMD_BUFFER_SIZE; ++i) { payload[payloadOffset] = 0x20; payloadOffset += 1; if(unicode == true) { payload[payloadOffset] = 0x00; payloadOffset += 1; } }
+		for(i = 0; i < BIN_PAYLOAD_CMD_BUFFER_SIZE; ++i) { payload[payloadOffset] = 0x20; payloadOffset += 1; if(unicode) { payload[payloadOffset] = 0x00; payloadOffset += 1; } }
 		for(i = 0; i < suffixBytes.length; ++i) { payload[payloadOffset] = suffixBytes[i]; payloadOffset += 1; }
 		return payload;
 	}
@@ -540,12 +540,12 @@ public abstract class FreddyModuleBase {
 		if(cmdLine.length() > BIN_PAYLOAD_CMD_BUFFER_SIZE) {
 			throw new IllegalArgumentException("FreddyModuleBase::generateBinaryPayload() must be called with a command that is shorter than " + BIN_PAYLOAD_CMD_BUFFER_SIZE + " characters in length. The supplied command was '" + cmdLine + "'.");
 		}
-		if(payloadBuffer.length < cmdOffset + (unicode == true ? BIN_PAYLOAD_CMD_BUFFER_SIZE * 2 : BIN_PAYLOAD_CMD_BUFFER_SIZE)) {
+		if(payloadBuffer.length < cmdOffset + (unicode ? BIN_PAYLOAD_CMD_BUFFER_SIZE * 2 : BIN_PAYLOAD_CMD_BUFFER_SIZE)) {
 			throw new IllegalArgumentException("FreddyModuleBase::generateBinaryPayload() was called with a payload buffer that is not long enough to contain a " + BIN_PAYLOAD_CMD_BUFFER_SIZE + "-character command line from the supplied offset " + cmdOffset + ".");
 		}
 		
 		//Write the command line into the payload bufufer at the given offset and return the result
-		if(unicode == true) { offsetInc = 2; } else { offsetInc = 1; }
+		if(unicode) { offsetInc = 2; } else { offsetInc = 1; }
 		cmdLineBytes = cmdLine.getBytes(StandardCharsets.US_ASCII);
 		payloadOffset = cmdOffset;
 		for(int i = 0; i < BIN_PAYLOAD_CMD_BUFFER_SIZE; ++i) {
@@ -584,15 +584,15 @@ public abstract class FreddyModuleBase {
 		if(cmdOffset1 >= cmdOffset2) {
 			throw new IllegalArgumentException("FreddyModuleBase::generateBinaryPayload() was called with command line offset 1 and 2 in the wrong order.");
 		}
-		if(cmdOffset1 + (unicode == true ? BIN_PAYLOAD_CMD_BUFFER_SIZE * 2 : BIN_PAYLOAD_CMD_BUFFER_SIZE) > cmdOffset2) {
+		if(cmdOffset1 + (unicode ? BIN_PAYLOAD_CMD_BUFFER_SIZE * 2 : BIN_PAYLOAD_CMD_BUFFER_SIZE) > cmdOffset2) {
 			throw new IllegalArgumentException("FreddyModuleBase::generateBinaryPayload() was called with overlapping command line offsets (" + cmdOffset1 + ", " + cmdOffset2 + ").");
 		}
-		if(payloadBuffer.length < cmdOffset2 + (unicode == true ? BIN_PAYLOAD_CMD_BUFFER_SIZE * 2 : BIN_PAYLOAD_CMD_BUFFER_SIZE)) {
+		if(payloadBuffer.length < cmdOffset2 + (unicode ? BIN_PAYLOAD_CMD_BUFFER_SIZE * 2 : BIN_PAYLOAD_CMD_BUFFER_SIZE)) {
 			throw new IllegalArgumentException("FreddyModuleBase::generateBinaryPayload() was called with a payload buffer that is not long enough to contain a " + BIN_PAYLOAD_CMD_BUFFER_SIZE + "-character command line from the supplied offset " + cmdOffset2 + ".");
 		}
 		
 		//Write the command line into the payload bufufer at the given offset and return the result
-		if(unicode == true) { offsetInc = 2; } else { offsetInc = 1; }
+		if(unicode) { offsetInc = 2; } else { offsetInc = 1; }
 		cmdLineBytes = cmdLine.getBytes(StandardCharsets.US_ASCII);
 		payloadOffset1 = cmdOffset1;
 		payloadOffset2 = cmdOffset2;
@@ -706,14 +706,14 @@ public abstract class FreddyModuleBase {
 	 * @return A list of identified issues.
 	 ******************/
 	public List<IScanIssue> doPassiveScan(IHttpRequestResponse baseReqRes, String requestStr, String responseStr) {
-		ArrayList<IScanIssue> issues = new ArrayList<IScanIssue>();
-		ArrayList<int[]> requestMarkers = new ArrayList<int[]>();
-		ArrayList<int[]> responseMarkers = new ArrayList<int[]>();
+		ArrayList<IScanIssue> issues = new ArrayList<>();
+		ArrayList<int[]> requestMarkers = new ArrayList<>();
+		ArrayList<int[]> responseMarkers = new ArrayList<>();
 		ArrayList<int[]> currentMarkers;
 		
 		//Check for false positive indicators in the request
 		for(ScanIndicator indicator: _passiveReqFPIndicators) {
-			if(indicator.isTextBased() == true) {
+			if(indicator.isTextBased()) {
 				currentMarkers = indicator.findInstances(requestStr);
 			} else {
 				currentMarkers = indicator.findInstances(baseReqRes.getResponse());
@@ -725,7 +725,7 @@ public abstract class FreddyModuleBase {
 		
 		//Check for false positive indicators in the response
 		for(ScanIndicator indicator: _passiveResFPIndicators) {
-			if(indicator.isTextBased() == true) {
+			if(indicator.isTextBased()) {
 				currentMarkers = indicator.findInstances(requestStr);
 			} else {
 				currentMarkers = indicator.findInstances(baseReqRes.getResponse());
@@ -737,7 +737,7 @@ public abstract class FreddyModuleBase {
 		
 		//Check for indicators in the request
 		for(ScanIndicator indicator: _passiveReqIndicators) {
-			if(indicator.isTextBased() == true) {
+			if(indicator.isTextBased()) {
 				currentMarkers = indicator.findInstances(requestStr);
 			} else {
 				currentMarkers = indicator.findInstances(baseReqRes.getRequest());
@@ -751,7 +751,7 @@ public abstract class FreddyModuleBase {
 		
 		//Check for indicators in the response
 		for(ScanIndicator indicator: _passiveResIndicators) {
-			if(indicator.isTextBased() == true) {
+			if(indicator.isTextBased()) {
 				currentMarkers = indicator.findInstances(responseStr);
 			} else {
 				currentMarkers = indicator.findInstances(baseReqRes.getResponse());
@@ -780,8 +780,8 @@ public abstract class FreddyModuleBase {
 	 * @return A list of identified issues.
 	 ******************/
 	public List<IScanIssue> doActiveScan(IHttpRequestResponse baseReqRes, IScannerInsertionPoint insertionPoint) {
-		ArrayList<IScanIssue> issues = new ArrayList<IScanIssue>();
-		ArrayList<int[]> reqMarkers = new ArrayList<int[]>();
+		ArrayList<IScanIssue> issues = new ArrayList<>();
+		ArrayList<int[]> reqMarkers = new ArrayList<>();
 		ArrayList<int[]> currentMarkers;
 		IHttpRequestResponse newReqRes;
 		String responseStr;
@@ -808,7 +808,7 @@ public abstract class FreddyModuleBase {
 		
 		//Test time-based payloads
 		if(_timeBasedPayloads.size() > 0) {
-			reqMarkers = new ArrayList<int[]>();
+			reqMarkers = new ArrayList<>();
 			requestStartTime = System.currentTimeMillis();
 			_callbacks.makeHttpRequest(baseReqRes.getHttpService(), insertionPoint.buildRequest(_helpers.stringToBytes(insertionPoint.getBaseValue())));
 			baseRequestTime = System.currentTimeMillis() - requestStartTime;
@@ -826,7 +826,7 @@ public abstract class FreddyModuleBase {
 		}
 		
 		//Issue collaborator-based payloads
-		if(_rceCapable == true) {
+		if(_rceCapable) {
 			for(CollaboratorPayload p: _collaboratorPayloads) {
 				collabId = _collabContext.generatePayload(false);
 				if(p.isBinary() == false) {
@@ -845,12 +845,12 @@ public abstract class FreddyModuleBase {
 							"' payload, indicating that it may not have been implemented correctly.");
 				}
 				newReqRes = _callbacks.makeHttpRequest(baseReqRes.getHttpService(), insertionPoint.buildRequest(payloadBytes));
-				reqMarkers = new ArrayList<int[]>();
+				reqMarkers = new ArrayList<>();
 				reqMarkers.add(insertionPoint.getPayloadOffsets(payloadBytes));
 				_collabRecords.add(new CollaboratorRecord(collabId, collabId + "." + _collabContext.getCollaboratorServerLocation(), baseReqRes, newReqRes, reqMarkers, true));
 				
 				//Repeat with a base 64 encoded payload if the payload is a binary one
-				if(p.isBinary() == true) {
+				if(p.isBinary()) {
 					collabId = _collabContext.generatePayload(false);
 					payloadBytes = _helpers.stringToBytes(_helpers.base64Encode(generateCollaboratorBytePayload(p.getPayloadName(), collabId + "." + _collabContext.getCollaboratorServerLocation())));
 					if(payloadBytes == null) {
@@ -859,7 +859,7 @@ public abstract class FreddyModuleBase {
 								"' payload, indicating that it may not have been implemented correctly.");
 					}
 					newReqRes = _callbacks.makeHttpRequest(baseReqRes.getHttpService(), insertionPoint.buildRequest(payloadBytes));
-					reqMarkers = new ArrayList<int[]>();
+					reqMarkers = new ArrayList<>();
 					reqMarkers.add(insertionPoint.getPayloadOffsets(payloadBytes));
 					_collabRecords.add(new CollaboratorRecord(collabId, collabId + "." + _collabContext.getCollaboratorServerLocation(), baseReqRes, newReqRes, reqMarkers, true));
 				}
@@ -913,7 +913,7 @@ public abstract class FreddyModuleBase {
 				_targetName + "</strong> library/API. An attacker may be able to supply arbitrary " +
 				"serialized objects to the application which, if deserialized without proper prior validation" +
 				", could lead to arbitrary code execution.";
-		if(_rceCapable == true) {
+		if(_rceCapable) {
 			issueDescription += " Consider performing an active scan or Intruder attack using the Freddy " +
 					"payload gnerator against the serialized data in the given request in order to verify " +
 					"whether the application is vulnerable to RCE.";
@@ -973,7 +973,7 @@ public abstract class FreddyModuleBase {
 				"data. If the application does not properly validate or filter the data prior to or during " +
 				"deserialization then an attacker may be able to instantiate arbitrary objects, potentially " +
 				"leading to arbitrary code execution.";
-		if(_rceCapable == true) {
+		if(_rceCapable) {
 			issueDescription += " RCE payloads are included within Freddy for this library/API. Consider " +
 					"performing an active scan or Intruder attack using the Freddy payload generator against " +
 					"the given HTTP request in order to verify whether the application is vulnerable to RCE.";
@@ -1119,7 +1119,9 @@ public abstract class FreddyModuleBase {
 		return _exceptionBasedPayloads;
 	}
 
-	public ArrayList<byte[]> getRCEPayloads(IIntruderAttack attack) {
-		return null;
+	public ArrayList<Payload> getRCEPayloads(IIntruderAttack attack) {
+		ArrayList<Payload> result = new ArrayList<>();
+		result.addAll(_timeBasedPayloads);
+		return result;
 	}
 }
