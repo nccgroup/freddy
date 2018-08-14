@@ -269,7 +269,7 @@ import nb.freddy.modules.java.YAMLBeansModule;
 public class Freddy implements IScannerCheck, IExtensionStateListener {
 	//Constants
 	private static final String EXTENSION_NAME = "Freddy";
-	private static final float EXTENSION_VERSION = 2.0f;
+	private static final float EXTENSION_VERSION = 2.1f;
 	private static final String[] IGNORE_EXTENSIONS = {".css", ".js", ".jpg", ".jpeg", ".gif", ".png", ".svg", ".ico"};
 	
 	//Burp objects
@@ -350,7 +350,7 @@ public class Freddy implements IScannerCheck, IExtensionStateListener {
 		
 		//Register payload generator factories
 		_callbacks.registerIntruderPayloadGeneratorFactory(new ErrorPayloadGeneratorFactory(_modules));
-		_callbacks.registerIntruderPayloadGeneratorFactory(new RCEPayloadGeneratorFactory(_modules));
+//		_callbacks.registerIntruderPayloadGeneratorFactory(new RCEPayloadGeneratorFactory(_modules));
 		
 		//Start the Collaborator polling thread
 		_freddyCollaborator = new FreddyCollaboratorThread(_collabContext, _modules);
