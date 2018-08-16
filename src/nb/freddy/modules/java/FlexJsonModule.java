@@ -8,29 +8,30 @@
 
 package nb.freddy.modules.java;
 
-import java.util.regex.Pattern;
 import nb.freddy.modules.FreddyModuleBase;
 import nb.freddy.modules.IndicatorTarget;
 import nb.freddy.modules.SeverityRating;
 import nb.freddy.modules.TargetPlatform;
 
+import java.util.regex.Pattern;
+
 /***********************************************************
  * Module targeting the Java FlexJson library.
- * 
+ *
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
 public class FlexJsonModule extends FreddyModuleBase {
-	protected void initialiseModule() {
-		setName("FlexJson");
-		setPlatform(TargetPlatform.JAVA);
-		setModuleIsRCECapable(false);
-		setDescriptionCaveats("");
-		setRemediationDetail("");
-		setSeverity(SeverityRating.MEDIUM);
-		
-		registerPassiveScanIndicator(Pattern.compile("((\")|(%22))class((\")|(%22))"), IndicatorTarget.REQUEST);
-		registerPassiveScanIndicator("flexjson.JSONException", IndicatorTarget.RESPONSE);
-		
-		registerActiveScanExceptionPayload("{\"class\":\"\"}", "flexjson.JSONException");
-	}
+    protected void initialiseModule() {
+        setName("FlexJson");
+        setPlatform(TargetPlatform.JAVA);
+        setModuleIsRCECapable(false);
+        setDescriptionCaveats("");
+        setRemediationDetail("");
+        setSeverity(SeverityRating.MEDIUM);
+
+        registerPassiveScanIndicator(Pattern.compile("((\")|(%22))class((\")|(%22))"), IndicatorTarget.REQUEST);
+        registerPassiveScanIndicator("flexjson.JSONException", IndicatorTarget.RESPONSE);
+
+        registerActiveScanExceptionPayload("{\"class\":\"\"}", "flexjson.JSONException");
+    }
 }

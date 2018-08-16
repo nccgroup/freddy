@@ -10,32 +10,32 @@ package nb.freddy.modules;
 
 /***********************************************************
  * Issue confidence enum.
- * 
+ *
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
 public enum ConfidenceRating {
-	CERTAIN("Certain"),
-	FIRM("Firm"),
-	TENTATIVE("Tentative");
-	
-	//Confidence string
-	private final String _confidence;
-	
-	/*******************
-	 * Construct from string.
-	 * 
-	 * @param confidence The confidence string.
-	 ******************/
-	private ConfidenceRating(String confidence) {
-		_confidence = confidence;
-	}
-	
-	/*******************
-	 * Convert confidence value to string.
-	 * 
-	 * @return The string representation of the enum value.
-	 ******************/
-	public String toString() {
-		return _confidence;
-	}
+    CERTAIN("Certain"),
+    FIRM("Firm"),
+    TENTATIVE("Tentative");
+
+    //Confidence string
+    private final String _confidence;
+
+    /*******************
+     * Construct from string.
+     *
+     * @param confidence The confidence string.
+     ******************/
+    ConfidenceRating(String confidence) {
+        _confidence = confidence;
+    }
+
+    /*******************
+     * Convert confidence value to string.
+     *
+     * @return The string representation of the enum value.
+     ******************/
+    public String toString() {
+        return _confidence;
+    }
 }

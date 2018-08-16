@@ -10,34 +10,34 @@ package nb.freddy.modules;
 
 /***********************************************************
  * Issue severity enum.
- * 
+ *
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
 public enum SeverityRating {
-	HIGH("High"),
-	MEDIUM("Medium"),
-	LOW("Low"),
-	INFORMATION("Information"),
-	FALSEPOSITIVE("False positive");
-	
-	//Severity string
-	private final String _severity;
-	
-	/*******************
-	 * Construct from string.
-	 * 
-	 * @param severity The severity string.
-	 ******************/
-	private SeverityRating(String severity) {
-		_severity = severity;
-	}
-	
-	/*******************
-	 * Convert severity value to string.
-	 * 
-	 * @return The string representation of the enum value.
-	 ******************/
-	public String toString() {
-		return _severity;
-	}
+    HIGH("High"),
+    MEDIUM("Medium"),
+    LOW("Low"),
+    INFORMATION("Information"),
+    FALSEPOSITIVE("False positive");
+
+    //Severity string
+    private final String _severity;
+
+    /*******************
+     * Construct from string.
+     *
+     * @param severity The severity string.
+     ******************/
+    SeverityRating(String severity) {
+        _severity = severity;
+    }
+
+    /*******************
+     * Convert severity value to string.
+     *
+     * @return The string representation of the enum value.
+     ******************/
+    public String toString() {
+        return _severity;
+    }
 }

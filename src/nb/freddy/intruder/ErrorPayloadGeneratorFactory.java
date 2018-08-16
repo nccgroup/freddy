@@ -29,7 +29,7 @@ public class ErrorPayloadGeneratorFactory implements IIntruderPayloadGeneratorFa
     /*******************
      * Properties
      ******************/
-    private ArrayList<FreddyModuleBase> _modules;
+    private final ArrayList<FreddyModuleBase> _modules;
 
     /*******************
      * Initialise the payload generator factory.

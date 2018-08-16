@@ -28,7 +28,7 @@ public class ErrorPayloadGenerator implements IIntruderPayloadGenerator {
     /*******************
      * Properties
      ******************/
-    private ArrayList<ExceptionPayload> _payloads;
+    private final ArrayList<ExceptionPayload> _payloads;
     private int _currentIndex;
 
     /*******************

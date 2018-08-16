@@ -15,20 +15,20 @@ import nb.freddy.modules.TargetPlatform;
 
 /***********************************************************
  * Module targeting the Java YAMLBeans library.
- * 
+ *
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
 public class YAMLBeansModule extends FreddyModuleBase {
-	protected void initialiseModule() {
-		setName("YAMLBeans");
-		setPlatform(TargetPlatform.JAVA);
-		setModuleIsRCECapable(false);
-		setDescriptionCaveats("");
-		setRemediationDetail("");
-		setSeverity(SeverityRating.MEDIUM);
-		
-		registerPassiveScanIndicator("com.esotericsoftware.yamlbeans.YamlException", IndicatorTarget.RESPONSE);
-		
-		registerActiveScanExceptionPayload("'", "com.esotericsoftware.yamlbeans.YamlException");
-	}
+    protected void initialiseModule() {
+        setName("YAMLBeans");
+        setPlatform(TargetPlatform.JAVA);
+        setModuleIsRCECapable(false);
+        setDescriptionCaveats("");
+        setRemediationDetail("");
+        setSeverity(SeverityRating.MEDIUM);
+
+        registerPassiveScanIndicator("com.esotericsoftware.yamlbeans.YamlException", IndicatorTarget.RESPONSE);
+
+        registerActiveScanExceptionPayload("'", "com.esotericsoftware.yamlbeans.YamlException");
+    }
 }
