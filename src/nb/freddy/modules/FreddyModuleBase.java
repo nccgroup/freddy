@@ -1164,6 +1164,12 @@ public abstract class FreddyModuleBase {
     }
 
     public ArrayList<Payload> getRCEPayloads(IIntruderAttack attack) {
-        return new ArrayList<>(_timeBasedPayloads);
+        String host = attack.getHttpService().getHost();
+        ArrayList<Payload> result = new ArrayList<>(_timeBasedPayloads);
+        for (CollaboratorPayload payload : _collaboratorPayloads) {
+            Payload p = new Payload(generateCollaboratorBytePayload(payload.getPayloadName(), host));
+            result.add(p);
+        }
+        return result;
     }
 }
