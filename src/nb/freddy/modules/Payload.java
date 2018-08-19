@@ -17,6 +17,10 @@ public class Payload {
     //Payload data
     byte[] _payloadBytes;
 
+    public Payload(byte[] bytes) {
+        _payloadBytes = bytes;
+    }
+
     /*******************
      * Get the payload bybts.
      *
