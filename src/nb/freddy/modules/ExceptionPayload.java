@@ -14,54 +14,44 @@ import java.util.regex.Pattern;
 /***********************************************************
  * Wrapper for an exception-based active scan payload and
  * a scan indicator that indicates success.
- * 
+ *
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
-public class ExceptionPayload {
-	//Payload data
-	private final byte[] _payloadBytes;
-	
-	//Exception-based success indicator
-	private final ScanIndicator _indicator;
-	
-	/*******************
-	 * Initialise a payload wrapper with a string indicator.
-	 * 
-	 * @param payloadBytes The payload that should trigger an exception when deserialized.
-	 * @param successIndicator A string that should appear in the exception if the application displays exceptions.
-	 ******************/
-	public ExceptionPayload(byte[] payloadBytes, String successIndicator) {
-		_payloadBytes = payloadBytes;
-		_indicator = new ScanIndicator(successIndicator);
-	}
-	
-	/*******************
-	 * Initialise a payload wrapper with a regex indicator.
-	 * 
-	 * @param payloadBytes The payload that should trigger an exception when deserialized.
-	 * @param successIndicator A regular expression that can be used to detect the resulting exception.
-	 ******************/
-	public ExceptionPayload(byte[] payloadBytes, Pattern successIndicator) {
-		_payloadBytes = payloadBytes;
-		_indicator = new ScanIndicator(successIndicator);
-	}
-	
-	/*******************
-	 * Get the payload bybts.
-	 * 
-	 * @return The payload bytes.
-	 ******************/
-	public byte[] getPayloadBytes() {
-		return _payloadBytes;
-	}
-	
-	/*******************
-	 * Search for the success indicator in a HTTP response string.
-	 * 
-	 * @param responseStr The HTTP response to search.
-	 * @return A list of int pairs marking the start and end indices of all instances of the indicator.
-	 ******************/
-	public ArrayList<int[]> findIndicator(String responseStr) {
-		return _indicator.findInstances(responseStr);
-	}
+public class ExceptionPayload extends Payload {
+
+
+    //Exception-based success indicator
+    private final ScanIndicator _indicator;
+
+    /*******************
+     * Initialise a payload wrapper with a string indicator.
+     *
+     * @param payloadBytes The payload that should trigger an exception when deserialized.
+     * @param successIndicator A string that should appear in the exception if the application displays exceptions.
+     ******************/
+    public ExceptionPayload(byte[] payloadBytes, String successIndicator) {
+        _payloadBytes = payloadBytes;
+        _indicator = new ScanIndicator(successIndicator);
+    }
+
+    /*******************
+     * Initialise a payload wrapper with a regex indicator.
+     *
+     * @param payloadBytes The payload that should trigger an exception when deserialized.
+     * @param successIndicator A regular expression that can be used to detect the resulting exception.
+     ******************/
+    public ExceptionPayload(byte[] payloadBytes, Pattern successIndicator) {
+        _payloadBytes = payloadBytes;
+        _indicator = new ScanIndicator(successIndicator);
+    }
+
+    /*******************
+     * Search for the success indicator in a HTTP response string.
+     *
+     * @param responseStr The HTTP response to search.
+     * @return A list of int pairs marking the start and end indices of all instances of the indicator.
+     ******************/
+    public ArrayList<int[]> findIndicator(String responseStr) {
+        return _indicator.findInstances(responseStr);
+    }
 }

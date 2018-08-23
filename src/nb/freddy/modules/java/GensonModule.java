@@ -8,29 +8,30 @@
 
 package nb.freddy.modules.java;
 
-import java.util.regex.Pattern;
 import nb.freddy.modules.FreddyModuleBase;
 import nb.freddy.modules.IndicatorTarget;
 import nb.freddy.modules.SeverityRating;
 import nb.freddy.modules.TargetPlatform;
 
+import java.util.regex.Pattern;
+
 /***********************************************************
  * Module targeting the Java Genson library.
- * 
+ *
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
 public class GensonModule extends FreddyModuleBase {
-	protected void initialiseModule() {
-		setName("Genson");
-		setPlatform(TargetPlatform.JAVA);
-		setModuleIsRCECapable(false);
-		setDescriptionCaveats("");
-		setRemediationDetail("");
-		setSeverity(SeverityRating.MEDIUM);
-		
-		registerPassiveScanIndicator(Pattern.compile("((\")|(%22))((@)|(%40))class((\")|(%22))"), IndicatorTarget.REQUEST);
-		registerPassiveScanIndicator(new Pattern[] { Pattern.compile("com\\.owlike\\.genson\\."), Pattern.compile("exception", Pattern.CASE_INSENSITIVE) } , IndicatorTarget.RESPONSE);
-		
-		registerActiveScanExceptionPayload("{\"@class\":\"\"}", "genson.JsonBindingException");
-	}
+    protected void initialiseModule() {
+        setName("Genson");
+        setPlatform(TargetPlatform.JAVA);
+        setModuleIsRCECapable(false);
+        setDescriptionCaveats("");
+        setRemediationDetail("");
+        setSeverity(SeverityRating.MEDIUM);
+
+        registerPassiveScanIndicator(Pattern.compile("((\")|(%22))((@)|(%40))class((\")|(%22))"), IndicatorTarget.REQUEST);
+        registerPassiveScanIndicator(new Pattern[]{Pattern.compile("com\\.owlike\\.genson\\."), Pattern.compile("exception", Pattern.CASE_INSENSITIVE)}, IndicatorTarget.RESPONSE);
+
+        registerActiveScanExceptionPayload("{\"@class\":\"\"}", "genson.JsonBindingException");
+    }
 }

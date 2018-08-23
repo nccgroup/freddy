@@ -10,10 +10,10 @@ package nb.freddy.modules;
 
 /***********************************************************
  * Scan indicator target enumeration.
- * 
+ *
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
 public enum IndicatorTarget {
-	REQUEST,
-	RESPONSE;
+    REQUEST,
+    RESPONSE
 }

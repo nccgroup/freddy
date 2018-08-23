@@ -10,40 +10,30 @@ package nb.freddy.modules;
 
 /***********************************************************
  * Wrapper for a time-based active scan payload.
- * 
+ *
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
-public class TimeBasedPayload {
-	//Payload data
-	private final byte[] _payloadBytes;
-	private final long _delay;
-	
-	/*******************
-	 * Initialise a time based payload wrapper.
-	 * 
-	 * @param payloadBytes The payload that should trigger a time delay (e.g. ping command).
-	 * @param delay An indication as to the time delay that should be induced using this payload.
-	 ******************/
-	public TimeBasedPayload(byte[] payloadBytes, long delay) {
-		_payloadBytes = payloadBytes;
-		_delay = delay;
-	}
-	
-	/*******************
-	 * Get the payload bytes.
-	 * 
-	 * @return The payload bytes.
-	 ******************/
-	public byte[] getPayloadBytes() {
-		return _payloadBytes;
-	}
-	
-	/*******************
-	 * Get the length of the time delay induced by this payload.
-	 * 
-	 * @return The time delay induced by this payload.
-	 ******************/
-	public long getTimeDelay() {
-		return _delay;
-	}
+public class TimeBasedPayload extends Payload {
+
+    private final long _delay;
+
+    /*******************
+     * Initialise a time based payload wrapper.
+     *
+     * @param payloadBytes The payload that should trigger a time delay (e.g. ping command).
+     * @param delay An indication as to the time delay that should be induced using this payload.
+     ******************/
+    public TimeBasedPayload(byte[] payloadBytes, long delay) {
+        _payloadBytes = payloadBytes;
+        _delay = delay;
+    }
+
+    /*******************
+     * Get the length of the time delay induced by this payload.
+     *
+     * @return The time delay induced by this payload.
+     ******************/
+    public long getTimeDelay() {
+        return _delay;
+    }
 }

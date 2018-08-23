@@ -15,22 +15,22 @@ import nb.freddy.modules.TargetPlatform;
 
 /***********************************************************
  * Passive detection module for Kryo.
- * 
+ *
  * This replaces the passive scan checks in the Kryo and
  * KryoAltStrategy modules which both check for the same
  * exception type in responses.
- * 
+ *
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
 public class KryoPassiveDetectionModule extends FreddyModuleBase {
-	protected void initialiseModule() {
-		setName("Kryo");
-		setPlatform(TargetPlatform.JAVA);
-		setModuleIsRCECapable(false);
-		setDescriptionCaveats("");
-		setRemediationDetail("");
-		setSeverity(SeverityRating.HIGH);
-		
-		registerPassiveScanIndicator("com.esotericsoftware.kryo.KryoException", IndicatorTarget.RESPONSE);
-	}
+    protected void initialiseModule() {
+        setName("Kryo");
+        setPlatform(TargetPlatform.JAVA);
+        setModuleIsRCECapable(false);
+        setDescriptionCaveats("");
+        setRemediationDetail("");
+        setSeverity(SeverityRating.HIGH);
+
+        registerPassiveScanIndicator("com.esotericsoftware.kryo.KryoException", IndicatorTarget.RESPONSE);
+    }
 }

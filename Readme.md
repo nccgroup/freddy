@@ -1,7 +1,7 @@
 # Freddy the Serial(isation) Killer  - Deserialization Bug Finder #
 A Burp Suite extension to aid in detecting and exploiting serialisation libraries/APIs.
 
-Based on the work of Alvaro Muñoz and Oleksandr Mirosh, [Friday the 13th: JSON Attacks](https://www.blackhat.com/us-17/briefings.html#friday-the-13th-json-attacks), which they presented at Black Hat USA 2017 and DEF CON 25. In their work they reviewed a range of JSON and XML serialisation libraries for Java and .NET and found that many of them support serialisation of arbitrary runtime objects and as a result are vulnerable in the same way as many serialisation technologies are - snippets of code (POP gadgets) that execute during or soon after deserialisation can be controlled using the properties of the serialized objects, often opening up the potential for arbitrary code or command execution.
+This useful extension was originally developed by Nick Bloor (@nickstadb) for NCC Group and is mainly based on the work of Alvaro Muñoz and Oleksandr Mirosh, [Friday the 13th: JSON Attacks](https://www.blackhat.com/us-17/briefings.html#friday-the-13th-json-attacks), which they presented at Black Hat USA 2017 and DEF CON 25. In their work they reviewed a range of JSON and XML serialisation libraries for Java and .NET and found that many of them support serialisation of arbitrary runtime objects and as a result are vulnerable in the same way as many serialisation technologies are - snippets of code (POP gadgets) that execute during or soon after deserialisation can be controlled using the properties of the serialized objects, often opening up the potential for arbitrary code or command execution.
 
 Further modules supporting more formats including YAML and AMF are also included, based on the paper [Java Unmarshaller Security - Turning your data into code execution](https://github.com/mbechler/marshalsec/blob/master/marshalsec.pdf) and tool [marshalsec](https://github.com/mbechler/marshalsec) by Moritz Bechler.
 
@@ -69,4 +69,4 @@ The following targets are currently supported (italics are new in v2.0):
 - Sweet.Jayson (detection)
 - *XmlSerializer (detection, RCE)*
 
-Released under agpl-3.0, see LICENSE for more informatio
+Released under agpl-3.0, see LICENSE for more information

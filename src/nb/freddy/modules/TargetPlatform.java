@@ -10,31 +10,31 @@ package nb.freddy.modules;
 
 /***********************************************************
  * Target platform enumeration.
- * 
+ *
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
 public enum TargetPlatform {
-	DOTNET(".NET"),
-	JAVA("Java");
-	
-	//Platform name string
-	private final String _name;
-	
-	/*******************
-	 * Construct with name string.
-	 * 
-	 * @param name The corresponding name string for the enum value.
-	 ******************/
-	private TargetPlatform(String name) {
-		_name = name;
-	}
-	
-	/*******************
-	 * Convert the enum value to a string.
-	 * 
-	 * @return The string name of the enum value.
-	 ******************/
-	public String toString() {
-		return _name;
-	}
+    DOTNET(".NET"),
+    JAVA("Java");
+
+    //Platform name string
+    private final String _name;
+
+    /*******************
+     * Construct with name string.
+     *
+     * @param name The corresponding name string for the enum value.
+     ******************/
+    TargetPlatform(String name) {
+        _name = name;
+    }
+
+    /*******************
+     * Convert the enum value to a string.
+     *
+     * @return The string name of the enum value.
+     ******************/
+    public String toString() {
+        return _name;
+    }
 }
