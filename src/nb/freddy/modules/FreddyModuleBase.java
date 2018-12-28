@@ -117,12 +117,11 @@ public abstract class FreddyModuleBase {
      * payloads.
      *
      * @param callbacks The Burp callbacks object.
-     * @param collabContext The Burp Collaborator client context object.
      ******************/
-    public final void initialise(IBurpExtenderCallbacks callbacks, IBurpCollaboratorClientContext collabContext) {
+    public final void initialise(IBurpExtenderCallbacks callbacks) {
         _callbacks = callbacks;
         _helpers = _callbacks.getHelpers();
-        _collabContext = collabContext;
+//        _collabContext = collabContext;
         initialiseModule();
     }
 
@@ -862,6 +861,8 @@ public abstract class FreddyModuleBase {
 
         //Issue collaborator-based payloads
         if (_rceCapable) {
+//            TODO SB generate new collacContext
+            _collabContext = _callbacks.createBurpCollaboratorClientContext();
             for (CollaboratorPayload p : _collaboratorPayloads) {
                 collabId = _collabContext.generatePayload(false);
                 if (!p.isBinary()) {
@@ -1166,6 +1167,7 @@ public abstract class FreddyModuleBase {
     public ArrayList<Payload> getRCEPayloads(IIntruderAttack attack) {
         String host = attack.getHttpService().getHost();
         ArrayList<Payload> result = new ArrayList<>();
+        _collabContext = _callbacks.createBurpCollaboratorClientContext();
         if (_timeBasedPayloads.size() > 0) result.addAll(_timeBasedPayloads);
         for (CollaboratorPayload payload : _collaboratorPayloads) {
             Payload p;
