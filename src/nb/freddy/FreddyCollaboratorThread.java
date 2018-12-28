@@ -10,6 +10,7 @@ package nb.freddy;
 
 import burp.IBurpCollaboratorClientContext;
 import burp.IBurpCollaboratorInteraction;
+import burp.IBurpExtenderCallbacks;
 import nb.freddy.modules.FreddyModuleBase;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class FreddyCollaboratorThread extends Thread {
     private static final long COLLAB_POLL_INTERVAL = 60000;
 
     //Collaborator context object used to poll the server
-    private final IBurpCollaboratorClientContext _collabContext;
+    private final IBurpExtenderCallbacks _callbacks = null;
 
     //All loaded Freddy scanner modules
     private final List<FreddyModuleBase> _modules;
@@ -39,11 +40,11 @@ public class FreddyCollaboratorThread extends Thread {
     /*******************
      * Initialise the collaborator polling thread.
      *
-     * @param collabContext The Collaborator context object from Burp Suite.
+     * @param _callbacks The Collaborator context object from Burp Suite.
      * @param modules A list of all loaded Freddy scanner modules.
      ******************/
-    public FreddyCollaboratorThread(IBurpCollaboratorClientContext collabContext, List<FreddyModuleBase> modules) {
-        _collabContext = collabContext;
+    public FreddyCollaboratorThread(IBurpExtenderCallbacks _callbacks, List<FreddyModuleBase> modules) {
+        _callbacks = _callbacks;
         _modules = modules;
         _stopFlag = false;
         _lastPollTime = 0;
@@ -64,6 +65,7 @@ public class FreddyCollaboratorThread extends Thread {
         List<IBurpCollaboratorInteraction> interactions;
         while (!_stopFlag) {
             if (System.currentTimeMillis() - _lastPollTime > COLLAB_POLL_INTERVAL) {
+                IBurpCollaboratorClientContext _collabContext = _callbacks.createBurpCollaboratorClientContext();
                 interactions = _collabContext.fetchAllCollaboratorInteractions();
                 for (IBurpCollaboratorInteraction interaction : interactions) {
                     //Pass the interaction to loaded Freddy scanner modules until one handles it

@@ -236,7 +236,6 @@ public class Freddy implements IScannerCheck, IExtensionStateListener {
     //Burp objects
     private IBurpExtenderCallbacks _callbacks;
     private IExtensionHelpers _helpers;
-    private IBurpCollaboratorClientContext _collabContext;
     //Collaborator polling thread
     private FreddyCollaboratorThread _freddyCollaborator;
 
@@ -295,14 +294,13 @@ public class Freddy implements IScannerCheck, IExtensionStateListener {
     public void initialise(IBurpExtenderCallbacks callbacks) {
         _callbacks = callbacks;
         _helpers = _callbacks.getHelpers();
-        _collabContext = _callbacks.createBurpCollaboratorClientContext();
         _callbacks.setExtensionName(EXTENSION_NAME + " v" + EXTENSION_VERSION);
         _callbacks.registerScannerCheck(this);
         _callbacks.registerExtensionStateListener(this);
 
         //Pass the Burp extender callbacks and the collaborator client context to all loaded modules
         for (FreddyModuleBase module : _modules) {
-            module.initialise(_callbacks, _collabContext);
+            module.initialise(_callbacks);
         }
 
         //Register payload generator factories
@@ -310,7 +308,7 @@ public class Freddy implements IScannerCheck, IExtensionStateListener {
         _callbacks.registerIntruderPayloadGeneratorFactory(new RCEPayloadGeneratorFactory(_modules));
 
         //Start the Collaborator polling thread
-        _freddyCollaborator = new FreddyCollaboratorThread(_collabContext, _modules);
+        _freddyCollaborator = new FreddyCollaboratorThread(_callbacks, _modules);
         _freddyCollaborator.start();
     }
 
