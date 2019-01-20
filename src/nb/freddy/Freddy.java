@@ -229,7 +229,7 @@ import java.util.List;
 public class Freddy implements IScannerCheck, IExtensionStateListener {
     //Constants
     public static final String EXTENSION_NAME = "Freddy";
-    private static final float EXTENSION_VERSION = 2.1f;
+    private static final String EXTENSION_VERSION = "2.2.1";
     private static final String[] IGNORE_EXTENSIONS = {".css", ".js", ".jpg", ".jpeg", ".gif", ".png", ".svg", ".ico"};
     //Freddy scanner modules
     private final ArrayList<FreddyModuleBase> _modules;
