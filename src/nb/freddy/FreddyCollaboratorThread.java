@@ -25,10 +25,10 @@ import java.util.List;
 public class FreddyCollaboratorThread extends Thread {
     //Interval constants
     private static final long THREAD_SLEEP_INTERVAL = 1000;
-    private static final long COLLAB_POLL_INTERVAL = 60000;
+    public static final long COLLAB_POLL_INTERVAL = 60000;
 
     //Collaborator context object used to poll the server
-    private final IBurpExtenderCallbacks _callbacks = null;
+    private final IBurpExtenderCallbacks _callbacks;
 
     //All loaded Freddy scanner modules
     private final List<FreddyModuleBase> _modules;
@@ -44,10 +44,10 @@ public class FreddyCollaboratorThread extends Thread {
      * @param modules A list of all loaded Freddy scanner modules.
      ******************/
     public FreddyCollaboratorThread(IBurpExtenderCallbacks _callbacks, List<FreddyModuleBase> modules) {
-        _callbacks = _callbacks;
-        _modules = modules;
-        _stopFlag = false;
-        _lastPollTime = 0;
+       this._callbacks = _callbacks;
+        this._modules = modules;
+        this._stopFlag = false;
+        this._lastPollTime = 0;
     }
 
     /*******************
@@ -74,6 +74,10 @@ public class FreddyCollaboratorThread extends Thread {
                             break;
                         }
                     }
+                }
+                // check if inactive records need to be removed
+                for (FreddyModuleBase _module : _modules) {
+                    _module.removeInactiveCollaboratorRecords();
                 }
                 _lastPollTime = System.currentTimeMillis();
             }

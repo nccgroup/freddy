@@ -9,11 +9,13 @@
 package nb.freddy.modules;
 
 import burp.*;
+import nb.freddy.FreddyCollaboratorThread;
 import nb.freddy.FreddyScanIssue;
 
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -87,6 +89,8 @@ public abstract class FreddyModuleBase {
     private String _remediationDetail;
     //Module-specific severity (e.g. some targets are dangerous but an attacker has to jump through additional hoops)
     private SeverityRating _severity;
+
+    private long MAXINACTIVETIME = FreddyCollaboratorThread.COLLAB_POLL_INTERVAL * 5;
 
     /*******************
      * Default constructor - perform basic initialisation.
@@ -914,17 +918,38 @@ public abstract class FreddyModuleBase {
      ******************/
     public boolean handleCollaboratorInteraction(IBurpCollaboratorInteraction interaction) {
         String interactionId = interaction.getProperty("interaction_id");
-        for (CollaboratorRecord record : _collabRecords) {
+        boolean result = false;
+        Iterator<CollaboratorRecord> iterator = _collabRecords.iterator();
+        while (iterator.hasNext()) {
+            CollaboratorRecord record = iterator.next();
             if (record.getCollaboratorId().equals(interactionId)) {
                 try {
                     _callbacks.addScanIssue(createCollaboratorIssue(record, interaction));
                 } catch (Exception ex) {
                     dbgLog("FreddyModuleBase[" + _targetName + "]::handleCollaboratorInteraction() exception: " + ex.getMessage());
                 }
-                return true;
+                iterator.remove();
+                result = true;
             }
         }
-        return false;
+
+        return result;
+    }
+
+
+    /**
+     * Iterates over all collaborator records and removes those that are still present after 5 minutes.
+     */
+    public void removeInactiveCollaboratorRecords() {
+        Iterator<CollaboratorRecord> iterator = _collabRecords.iterator();
+        long now = System.currentTimeMillis();
+        while (iterator.hasNext()) {
+            CollaboratorRecord record = iterator.next();
+            if ((now - record.getTimeStamp()) > MAXINACTIVETIME) {
+                iterator.remove();
+
+            }
+        }
     }
 
     /*******************
