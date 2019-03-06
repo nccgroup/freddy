@@ -8,7 +8,7 @@ import nb.freddy.Freddy;
  *
  * Written by Nicky Bloor (@NickstaDB).
  **********************************************************/
-public class BurpExtender {
+public class BurpExtender implements IBurpExtender{
     private Freddy _freddy;
 
     public BurpExtender() {
