@@ -865,7 +865,7 @@ public abstract class FreddyModuleBase {
 
         //Issue collaborator-based payloads
         if (_rceCapable) {
-//            TODO SB generate new collacContext
+//            TODO SB generate new collabContext
             _collabContext = _callbacks.createBurpCollaboratorClientContext();
             for (CollaboratorPayload p : _collaboratorPayloads) {
                 collabId = _collabContext.generatePayload(false);
@@ -1191,16 +1191,21 @@ public abstract class FreddyModuleBase {
 
     public ArrayList<Payload> getRCEPayloads(IIntruderAttack attack) {
         _collabContext = _callbacks.createBurpCollaboratorClientContext();
-//        String host = attack.getHttpService().getHost();
+
+        String collabId = _collabContext.generatePayload(false);
         String host = _collabContext.getCollaboratorServerLocation();
+        StringBuffer sb = new StringBuffer();
+        sb.append(collabId);
+        sb.append(".");
+        sb.append(host);
         ArrayList<Payload> result = new ArrayList<>();
         if (_timeBasedPayloads.size() > 0) result.addAll(_timeBasedPayloads);
         for (CollaboratorPayload payload : _collaboratorPayloads) {
             Payload p;
             if (payload.isBinary()) {
-                p = new Payload(generateCollaboratorBytePayload(payload.getPayloadName(), host));
+                p = new Payload(generateCollaboratorBytePayload(payload.getPayloadName(), sb.toString()));
             } else {
-                p = new Payload(generateCollaboratorTextPayload(payload.getPayloadName(), host).getBytes());
+                p = new Payload(generateCollaboratorTextPayload(payload.getPayloadName(), sb.toString()).getBytes());
             }
             result.add(p);
         }
