@@ -1,0 +1,75 @@
+<p>Helps with detecting and exploiting serialization libraries/APIs.</p>
+
+<p>This useful extension was originally developed by Nick Bloor (@nickstadb) for NCC Group and is mainly based on the work of Alvaro Munoz and Oleksandr Mirosh,
+    <a href="https://www.blackhat.com/us-17/briefings.html#friday-the-13th-json-attacks">Friday the 13th: JSON Attacks</a> which they presented at Black Hat USA 2017 and Def Con 25.
+    In their work they reviewed a range of JSON and XML serialization libraries for Java and .NET and found that many of them support serialization of arbitrary runtime objects and
+    as a result are vulnerable in the same way as many serialization technologies are - snippets of code (POP gadgets) that execute during or soon after deserialization can be
+    controlled using the properties of the serialized objects, often opening up the potential for arbitrary code or command execution.</p>
+
+<p>Further modules supporting more formats including YAML and AMF are also included, based on the paper
+    <a href="https://github.com/mbechler/marshalsec/blob/master/marshalsec.pdf">Java Unmarshaller Security - Turning your data into code execution</a>
+    and tool <a href="https://github.com/mbechler/marshalsec">marshalsec</a> by Moritz Bechler.</p>
+
+<p>Freddy Features:</p>
+
+<ul>
+    <li><b>Passive Scanning</b> - Freddy can passively detect the use of potentially dangerous serialization libraries and APIs by watching for type specifiers or other signatures in HTTP requests and by monitoring HTTP responses for exceptions issued by the target libraries. For example the library FastJson uses a JSON field $types to specify the type of the serialized object.
+    </li>
+    <li><b>Active Scanning</b> - Freddy includes active scanning functionality which attempts to both detect and, where possible, exploit affected libraries.</li>
+</ul>
+
+<p>Active scanning attempts to detect the use of vulnerable libraries using three methods:</p>
+
+<ul>
+    <li><b>Exception Based</b> - In exception-based active scanning, Freddy inserts data into the HTTP request that should trigger a known target-specific exception or error message. If this error message is observed in the application's response then an issue is raised.</li>
+    <li><b>Time Based</b> - In some cases time-based payloads can be used for detection because operating system command execution is triggered during deserialization and this action
+        blocks execution until the OS command has finished executing. Freddy uses payloads containing ping [-n|-c] 21 127.0.0.1 in order to induce a time delay in these cases.</li>
+    <li><b>Collaborator Based</b> - Collaborator-based payloads work either by issuing a nslookup command to resolve the Burp Suite Collaborator-generated domain name, or by attempting
+        to load remote classes from the domain name into a Java application. Freddy checks for new Collaborator issues every 60 seconds and marks them in the issues list with RCE (Collaborator).</li>
+</ul>
+
+<p>The following targets are currently supported:</p>
+
+<p><b>Java</b></p>
+
+<ul>
+    <li>BlazeDS AMF 0 (detection, RCE)</li>
+    <li>BlazeDS AMF 3 (detection, RCE)</li>
+    <li>BlazeDS AMF X (detection, RCE)</li>
+    <li>Burlap (detection, RCE)</li>
+    <li>Castor (detection, RCE)</li>
+    <li>FlexJson (detection)</li>
+    <li>Genson (detection)</li>
+    <li>Hessian (detection, RCE)</li>
+    <li>Jackson (detection, RCE)</li>
+    <li>JSON-IO (detection, RCE)</li>
+    <li>JYAML (detection, RCE)</li>
+    <li>Kryo (detection, RCE)</li>
+    <li>Kryo using StdInstantiatorStrategy (detection, RCE)</li>
+    <li>ObjectInputStream (detection, RCE)</li>
+    <li>Red5 AMF 0 (detection, RCE)</li>
+    <li>Red5 AMF 3 (detection, RCE)</li>
+    <li>SnakeYAML (detection, RCE)</li>
+    <li>XStream (detection, RCE)</li>
+    <li>XmlDecoder (detection, RCE)</li>
+    <li>YAMLBeans (detection, RCE)</li>
+</ul>
+
+<p><b>.NET</b></p>
+    
+<ul>
+    <li>BinaryFormatter (detection, RCE)</li>
+    <li>DataContractSerializer (detection, RCE)</li>
+    <li>DataContractJsonSerializer (detection, RCE)</li>
+    <li>FastJson (detection, RCE)</li>
+    <li>FsPickler JSON support (detection)</li>
+    <li>FsPickler XML support (detection)</li>
+    <li>JavascriptSerializer (detection, RCE)</li>
+    <li>Json.Net (detection, RCE)</li>
+    <li>LosFormatter (detection, RCE) - Note not a module itself, supported through ObjectStateFormatter</li>
+    <li>NetDataContractSerializer (detection, RCE)</li>
+    <li>ObjectStateFormatter (detection, RCE)</li>
+    <li>SoapFormatter (detection, RCE)</li>
+    <li>Sweet.Jayson (detection)</li>
+    <li>XmlSerializer (detection, RCE)</li>
+</ul>

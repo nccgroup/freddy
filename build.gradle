@@ -4,6 +4,8 @@ plugins {
     id 'idea'
 }
 
+compileJava.options.encoding = 'UTF-8'
+
 repositories {
     mavenCentral()
 }
@@ -52,3 +54,4 @@ jar {
     from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 
 }
+
