@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'net.portswigger.burp.extender:burp-extender-api:1.7.22'
+    compile 'net.portswigger.burp.extender:burp-extender-api:1.7.22'
     testCompile 'junit:junit:4.12'
 }
 
