@@ -1,5 +1,7 @@
+
 plugins {
     id 'java'
+    id 'idea'
 }
 
 compileJava.options.encoding = 'UTF-8'
@@ -11,6 +13,8 @@ repositories {
 dependencies {
     compile 'net.portswigger.burp.extender:burp-extender-api:1.7.22'
     testCompile 'junit:junit:4.12'
+    testCompile 'org.powermock:powermock-module-junit4:1.7.4'
+    testCompile 'org.powermock:powermock-api-mockito2:1.7.4'
 }
 
 def getVersionName = { ->
@@ -41,11 +45,13 @@ def getVersionName = { ->
 sourceCompatibility = 1.8
 // deviates from standard Gradle directory structure
 sourceSets.main.java.srcDirs = ['src']
+sourceSets.test.java.srcDirs = ['test']
 
 version = getVersionName()
 group 'trust.nccgroup'
 
 jar {
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+
 }
 

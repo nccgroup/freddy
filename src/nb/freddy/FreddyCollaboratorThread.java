@@ -10,6 +10,7 @@ package nb.freddy;
 
 import burp.IBurpCollaboratorClientContext;
 import burp.IBurpCollaboratorInteraction;
+import burp.IBurpExtenderCallbacks;
 import nb.freddy.modules.FreddyModuleBase;
 
 import java.util.List;
@@ -24,10 +25,10 @@ import java.util.List;
 public class FreddyCollaboratorThread extends Thread {
     //Interval constants
     private static final long THREAD_SLEEP_INTERVAL = 1000;
-    private static final long COLLAB_POLL_INTERVAL = 60000;
+    public static final long COLLAB_POLL_INTERVAL = 60000;
 
     //Collaborator context object used to poll the server
-    private final IBurpCollaboratorClientContext _collabContext;
+    private final IBurpExtenderCallbacks _callbacks;
 
     //All loaded Freddy scanner modules
     private final List<FreddyModuleBase> _modules;
@@ -39,14 +40,14 @@ public class FreddyCollaboratorThread extends Thread {
     /*******************
      * Initialise the collaborator polling thread.
      *
-     * @param collabContext The Collaborator context object from Burp Suite.
+     * @param _callbacks The Collaborator context object from Burp Suite.
      * @param modules A list of all loaded Freddy scanner modules.
      ******************/
-    public FreddyCollaboratorThread(IBurpCollaboratorClientContext collabContext, List<FreddyModuleBase> modules) {
-        _collabContext = collabContext;
-        _modules = modules;
-        _stopFlag = false;
-        _lastPollTime = 0;
+    public FreddyCollaboratorThread(IBurpExtenderCallbacks _callbacks, List<FreddyModuleBase> modules) {
+       this._callbacks = _callbacks;
+        this._modules = modules;
+        this._stopFlag = false;
+        this._lastPollTime = 0;
     }
 
     /*******************
@@ -64,6 +65,7 @@ public class FreddyCollaboratorThread extends Thread {
         List<IBurpCollaboratorInteraction> interactions;
         while (!_stopFlag) {
             if (System.currentTimeMillis() - _lastPollTime > COLLAB_POLL_INTERVAL) {
+                IBurpCollaboratorClientContext _collabContext = _callbacks.createBurpCollaboratorClientContext();
                 interactions = _collabContext.fetchAllCollaboratorInteractions();
                 for (IBurpCollaboratorInteraction interaction : interactions) {
                     //Pass the interaction to loaded Freddy scanner modules until one handles it
@@ -72,6 +74,10 @@ public class FreddyCollaboratorThread extends Thread {
                             break;
                         }
                     }
+                }
+                // check if inactive records need to be removed
+                for (FreddyModuleBase _module : _modules) {
+                    _module.removeInactiveCollaboratorRecords();
                 }
                 _lastPollTime = System.currentTimeMillis();
             }

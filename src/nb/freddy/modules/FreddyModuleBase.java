@@ -9,11 +9,13 @@
 package nb.freddy.modules;
 
 import burp.*;
+import nb.freddy.FreddyCollaboratorThread;
 import nb.freddy.FreddyScanIssue;
 
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -88,6 +90,8 @@ public abstract class FreddyModuleBase {
     //Module-specific severity (e.g. some targets are dangerous but an attacker has to jump through additional hoops)
     private SeverityRating _severity;
 
+    private long MAXINACTIVETIME = FreddyCollaboratorThread.COLLAB_POLL_INTERVAL * 5;
+
     /*******************
      * Default constructor - perform basic initialisation.
      ******************/
@@ -117,12 +121,11 @@ public abstract class FreddyModuleBase {
      * payloads.
      *
      * @param callbacks The Burp callbacks object.
-     * @param collabContext The Burp Collaborator client context object.
      ******************/
-    public final void initialise(IBurpExtenderCallbacks callbacks, IBurpCollaboratorClientContext collabContext) {
+    public final void initialise(IBurpExtenderCallbacks callbacks) {
         _callbacks = callbacks;
         _helpers = _callbacks.getHelpers();
-        _collabContext = collabContext;
+//        _collabContext = collabContext;
         initialiseModule();
     }
 
@@ -862,6 +865,8 @@ public abstract class FreddyModuleBase {
 
         //Issue collaborator-based payloads
         if (_rceCapable) {
+//            TODO SB generate new collabContext
+            _collabContext = _callbacks.createBurpCollaboratorClientContext();
             for (CollaboratorPayload p : _collaboratorPayloads) {
                 collabId = _collabContext.generatePayload(false);
                 if (!p.isBinary()) {
@@ -913,17 +918,38 @@ public abstract class FreddyModuleBase {
      ******************/
     public boolean handleCollaboratorInteraction(IBurpCollaboratorInteraction interaction) {
         String interactionId = interaction.getProperty("interaction_id");
-        for (CollaboratorRecord record : _collabRecords) {
+        boolean result = false;
+        Iterator<CollaboratorRecord> iterator = _collabRecords.iterator();
+        while (iterator.hasNext()) {
+            CollaboratorRecord record = iterator.next();
             if (record.getCollaboratorId().equals(interactionId)) {
                 try {
                     _callbacks.addScanIssue(createCollaboratorIssue(record, interaction));
                 } catch (Exception ex) {
                     dbgLog("FreddyModuleBase[" + _targetName + "]::handleCollaboratorInteraction() exception: " + ex.getMessage());
                 }
-                return true;
+                iterator.remove();
+                result = true;
             }
         }
-        return false;
+
+        return result;
+    }
+
+
+    /**
+     * Iterates over all collaborator records and removes those that are still present after 5 minutes.
+     */
+    public void removeInactiveCollaboratorRecords() {
+        Iterator<CollaboratorRecord> iterator = _collabRecords.iterator();
+        long now = System.currentTimeMillis();
+        while (iterator.hasNext()) {
+            CollaboratorRecord record = iterator.next();
+            if ((now - record.getTimeStamp()) > MAXINACTIVETIME) {
+                iterator.remove();
+
+            }
+        }
     }
 
     /*******************
@@ -1164,15 +1190,22 @@ public abstract class FreddyModuleBase {
     }
 
     public ArrayList<Payload> getRCEPayloads(IIntruderAttack attack) {
-        String host = attack.getHttpService().getHost();
+        _collabContext = _callbacks.createBurpCollaboratorClientContext();
+
+        String collabId = _collabContext.generatePayload(false);
+        String host = _collabContext.getCollaboratorServerLocation();
+        StringBuffer sb = new StringBuffer();
+        sb.append(collabId);
+        sb.append(".");
+        sb.append(host);
         ArrayList<Payload> result = new ArrayList<>();
         if (_timeBasedPayloads.size() > 0) result.addAll(_timeBasedPayloads);
         for (CollaboratorPayload payload : _collaboratorPayloads) {
             Payload p;
             if (payload.isBinary()) {
-                p = new Payload(generateCollaboratorBytePayload(payload.getPayloadName(), host));
+                p = new Payload(generateCollaboratorBytePayload(payload.getPayloadName(), sb.toString()));
             } else {
-                p = new Payload(generateCollaboratorTextPayload(payload.getPayloadName(), host).getBytes());
+                p = new Payload(generateCollaboratorTextPayload(payload.getPayloadName(), sb.toString()).getBytes());
             }
             result.add(p);
         }

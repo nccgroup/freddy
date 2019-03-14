@@ -30,6 +30,7 @@ class CollaboratorRecord {
     private final byte[] _requestBody;
     private final List<int[]> _reqMarkers;
     private final boolean _activeScanRecord;
+    private final long timeStamp;
 
     /*******************
      * Initialise a Collaborator record.
@@ -50,6 +51,7 @@ class CollaboratorRecord {
         _requestBody = newReqRes.getRequest();
         _reqMarkers = reqMarkers;
         _activeScanRecord = activeScan;
+        timeStamp = System.currentTimeMillis();
     }
 
     /*******************
@@ -81,5 +83,9 @@ class CollaboratorRecord {
 
     public List<int[]> getRequestMarkers() {
         return _reqMarkers;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
     }
 }
