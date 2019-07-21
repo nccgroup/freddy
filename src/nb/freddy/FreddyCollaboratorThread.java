@@ -11,6 +11,7 @@ package nb.freddy;
 import burp.IBurpCollaboratorClientContext;
 import burp.IBurpCollaboratorInteraction;
 import burp.IBurpExtenderCallbacks;
+import com.esotericsoftware.minlog.Log;
 import nb.freddy.modules.FreddyModuleBase;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class FreddyCollaboratorThread extends Thread {
      * @param modules A list of all loaded Freddy scanner modules.
      ******************/
     public FreddyCollaboratorThread(IBurpExtenderCallbacks _callbacks, List<FreddyModuleBase> modules) {
-       this._callbacks = _callbacks;
+        this._callbacks = _callbacks;
         this._modules = modules;
         this._stopFlag = false;
         this._lastPollTime = 0;
@@ -65,16 +66,22 @@ public class FreddyCollaboratorThread extends Thread {
         List<IBurpCollaboratorInteraction> interactions;
         while (!_stopFlag) {
             if (System.currentTimeMillis() - _lastPollTime > COLLAB_POLL_INTERVAL) {
-                IBurpCollaboratorClientContext _collabContext = _callbacks.createBurpCollaboratorClientContext();
-                interactions = _collabContext.fetchAllCollaboratorInteractions();
-                for (IBurpCollaboratorInteraction interaction : interactions) {
-                    //Pass the interaction to loaded Freddy scanner modules until one handles it
-                    for (FreddyModuleBase _module : _modules) {
-                        if (_module.handleCollaboratorInteraction(interaction)) {
-                            break;
+                try {
+                    IBurpCollaboratorClientContext _collabContext = _callbacks.createBurpCollaboratorClientContext();
+                    interactions = _collabContext.fetchAllCollaboratorInteractions();
+                    for (IBurpCollaboratorInteraction interaction : interactions) {
+                        //Pass the interaction to loaded Freddy scanner modules until one handles it
+                        for (FreddyModuleBase _module : _modules) {
+                            if (_module.handleCollaboratorInteraction(interaction)) {
+                                break;
+                            }
                         }
                     }
+                } catch (IllegalStateException ex) {
+                    Log.warn("Collaborator is explicitly disabled, stopping");
+                    this._stopFlag = true;
                 }
+
                 // check if inactive records need to be removed
                 for (FreddyModuleBase _module : _modules) {
                     _module.removeInactiveCollaboratorRecords();

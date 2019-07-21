@@ -9,6 +9,7 @@
 package nb.freddy.modules;
 
 import burp.*;
+import com.esotericsoftware.minlog.Log;
 import nb.freddy.FreddyCollaboratorThread;
 import nb.freddy.FreddyScanIssue;
 
@@ -199,15 +200,6 @@ public abstract class FreddyModuleBase {
         _severity = severity;
     }
 
-    /*******************
-     * Debug logging method.
-     *
-     * @param msg A message to log.
-     ******************/
-    protected void dbgLog(String msg) {
-        PrintWriter pw = new PrintWriter(_callbacks.getStdout(), true);
-        pw.println(msg);
-    }
 
     /*******************
      * Right-pad a string with spaces to the given length.
@@ -866,42 +858,53 @@ public abstract class FreddyModuleBase {
         //Issue collaborator-based payloads
         if (_rceCapable) {
 //            TODO SB generate new collabContext
-            _collabContext = _callbacks.createBurpCollaboratorClientContext();
-            for (CollaboratorPayload p : _collaboratorPayloads) {
-                collabId = _collabContext.generatePayload(false);
-                if (!p.isBinary()) {
-                    try {
-                        payloadBytes = _helpers.stringToBytes(generateCollaboratorTextPayload(p.getPayloadName(), collabId + "." + _collabContext.getCollaboratorServerLocation()));
-                    } catch (NullPointerException npe) {
-                        dbgLog("[-] Null pointer exception in " + _targetName);
-                        throw npe;
-                    }
-                } else {
-                    payloadBytes = generateCollaboratorBytePayload(p.getPayloadName(), collabId + "." + _collabContext.getCollaboratorServerLocation());
-                }
-                if (payloadBytes == null) {
-                    throw new IllegalStateException("The module " + _targetName + " is flagged as RCE-capable " +
-                            "but the payload generator method returned null for the '" + p.getPayloadName() +
-                            "' payload, indicating that it may not have been implemented correctly.");
-                }
-                newReqRes = _callbacks.makeHttpRequest(baseReqRes.getHttpService(), insertionPoint.buildRequest(payloadBytes));
-                reqMarkers = new ArrayList<>();
-                reqMarkers.add(insertionPoint.getPayloadOffsets(payloadBytes));
-                _collabRecords.add(new CollaboratorRecord(collabId, collabId + "." + _collabContext.getCollaboratorServerLocation(), baseReqRes, newReqRes, reqMarkers, true));
-
-                //Repeat with a base 64 encoded payload if the payload is a binary one
-                if (p.isBinary()) {
+            _collabContext = null;
+            try {
+                _collabContext = _callbacks.createBurpCollaboratorClientContext();
+            } catch(IllegalStateException ex) {
+                Log.warn("Collaborator is explicitly disabled, stopping");
+            }
+            if( _collabContext  != null) {
+                for (CollaboratorPayload p : _collaboratorPayloads) {
                     collabId = _collabContext.generatePayload(false);
-                    payloadBytes = _helpers.stringToBytes(_helpers.base64Encode(generateCollaboratorBytePayload(p.getPayloadName(), collabId + "." + _collabContext.getCollaboratorServerLocation())));
+                    if (!p.isBinary()) {
+                        try {
+                            payloadBytes = _helpers.stringToBytes(generateCollaboratorTextPayload(p.getPayloadName(), collabId + "." + _collabContext.getCollaboratorServerLocation()));
+                        } catch (NullPointerException npe) {
+                            Log.debug("[-] Null pointer exception in " + _targetName);
+                            throw npe;
+                        }
+                    } else {
+                        payloadBytes = generateCollaboratorBytePayload(p.getPayloadName(), collabId + "." + _collabContext.getCollaboratorServerLocation());
+                    }
                     if (payloadBytes == null) {
-                        throw new IllegalStateException("The module " + _targetName + " is flagged as RCE-capable " +
+                        String message = "The module " + _targetName + " is flagged as RCE-capable " +
                                 "but the payload generator method returned null for the '" + p.getPayloadName() +
-                                "' payload, indicating that it may not have been implemented correctly.");
+                                "' payload, indicating that it may not have been implemented correctly.";
+                        Log.warn(message);
+                        throw new IllegalStateException(message);
                     }
                     newReqRes = _callbacks.makeHttpRequest(baseReqRes.getHttpService(), insertionPoint.buildRequest(payloadBytes));
                     reqMarkers = new ArrayList<>();
                     reqMarkers.add(insertionPoint.getPayloadOffsets(payloadBytes));
                     _collabRecords.add(new CollaboratorRecord(collabId, collabId + "." + _collabContext.getCollaboratorServerLocation(), baseReqRes, newReqRes, reqMarkers, true));
+
+                    //Repeat with a base 64 encoded payload if the payload is a binary one
+                    if (p.isBinary()) {
+                        collabId = _collabContext.generatePayload(false);
+                        payloadBytes = _helpers.stringToBytes(_helpers.base64Encode(generateCollaboratorBytePayload(p.getPayloadName(), collabId + "." + _collabContext.getCollaboratorServerLocation())));
+                        if (payloadBytes == null) {
+                            String message = "The module " + _targetName + " is flagged as RCE-capable " +
+                                    "but the payload generator method returned null for the '" + p.getPayloadName() +
+                                    "' payload, indicating that it may not have been implemented correctly.";
+                            Log.warn(message);
+                            throw new IllegalStateException(message);
+                        }
+                        newReqRes = _callbacks.makeHttpRequest(baseReqRes.getHttpService(), insertionPoint.buildRequest(payloadBytes));
+                        reqMarkers = new ArrayList<>();
+                        reqMarkers.add(insertionPoint.getPayloadOffsets(payloadBytes));
+                        _collabRecords.add(new CollaboratorRecord(collabId, collabId + "." + _collabContext.getCollaboratorServerLocation(), baseReqRes, newReqRes, reqMarkers, true));
+                    }
                 }
             }
         }
@@ -926,7 +929,7 @@ public abstract class FreddyModuleBase {
                 try {
                     _callbacks.addScanIssue(createCollaboratorIssue(record, interaction));
                 } catch (Exception ex) {
-                    dbgLog("FreddyModuleBase[" + _targetName + "]::handleCollaboratorInteraction() exception: " + ex.getMessage());
+                    Log.debug("FreddyModuleBase[" + _targetName + "]::handleCollaboratorInteraction() exception: " + ex.getMessage());
                 }
                 iterator.remove();
                 result = true;
@@ -1190,24 +1193,29 @@ public abstract class FreddyModuleBase {
     }
 
     public ArrayList<Payload> getRCEPayloads(IIntruderAttack attack) {
-        _collabContext = _callbacks.createBurpCollaboratorClientContext();
-
-        String collabId = _collabContext.generatePayload(false);
-        String host = _collabContext.getCollaboratorServerLocation();
-        StringBuffer sb = new StringBuffer();
-        sb.append(collabId);
-        sb.append(".");
-        sb.append(host);
         ArrayList<Payload> result = new ArrayList<>();
-        if (_timeBasedPayloads.size() > 0) result.addAll(_timeBasedPayloads);
-        for (CollaboratorPayload payload : _collaboratorPayloads) {
-            Payload p;
-            if (payload.isBinary()) {
-                p = new Payload(generateCollaboratorBytePayload(payload.getPayloadName(), sb.toString()));
-            } else {
-                p = new Payload(generateCollaboratorTextPayload(payload.getPayloadName(), sb.toString()).getBytes());
+        try {
+            _collabContext = _callbacks.createBurpCollaboratorClientContext();
+
+            String collabId = _collabContext.generatePayload(false);
+            String host = _collabContext.getCollaboratorServerLocation();
+            StringBuffer sb = new StringBuffer();
+            sb.append(collabId);
+            sb.append(".");
+            sb.append(host);
+
+            if (_timeBasedPayloads.size() > 0) result.addAll(_timeBasedPayloads);
+            for (CollaboratorPayload payload : _collaboratorPayloads) {
+                Payload p;
+                if (payload.isBinary()) {
+                    p = new Payload(generateCollaboratorBytePayload(payload.getPayloadName(), sb.toString()));
+                } else {
+                    p = new Payload(generateCollaboratorTextPayload(payload.getPayloadName(), sb.toString()).getBytes());
+                }
+                result.add(p);
             }
-            result.add(p);
+        } catch (IllegalStateException ex) {
+            Log.warn("Burpsuite Collaborator is explicitly disabled, returning empty array");
         }
         return result;
     }
