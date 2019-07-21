@@ -9,12 +9,14 @@
 package nb.freddy;
 
 import burp.*;
+import com.esotericsoftware.minlog.Log;
 import nb.freddy.intruder.ErrorPayloadGeneratorFactory;
 import nb.freddy.intruder.RCEPayloadGeneratorFactory;
 import nb.freddy.modules.FreddyModuleBase;
 import nb.freddy.modules.dotnet.*;
 import nb.freddy.modules.java.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -229,7 +231,7 @@ import java.util.List;
 public class Freddy implements IScannerCheck, IExtensionStateListener {
     //Constants
     public static final String EXTENSION_NAME = "Freddy";
-    private static final String EXTENSION_VERSION = "2.2.1";
+    private static final String EXTENSION_VERSION = "2.2.3";
     private static final String[] IGNORE_EXTENSIONS = {".css", ".js", ".jpg", ".jpeg", ".gif", ".png", ".svg", ".ico"};
     //Freddy scanner modules
     private final ArrayList<FreddyModuleBase> _modules;
@@ -297,6 +299,23 @@ public class Freddy implements IScannerCheck, IExtensionStateListener {
         _callbacks.setExtensionName(EXTENSION_NAME + " v" + EXTENSION_VERSION);
         _callbacks.registerScannerCheck(this);
         _callbacks.registerExtensionStateListener(this);
+
+        Log.setLogger(new Log.Logger() {
+            @Override
+            protected void print(String message) {
+                try {
+                    if (message.contains("ERROR:")) { //Not the most elegant way, but should be effective.
+                        callbacks.issueAlert(message);
+                        callbacks.printError(message);
+                    }
+                    callbacks.getStdout().write(message.getBytes());
+                    callbacks.getStdout().write('\n');
+                } catch (IOException e) {
+                    System.err.println("Error while printing the log : " + e.getMessage()); //Very unlikely
+                }
+            }
+        });
+        Log.INFO();
 
         //Pass the Burp extender callbacks and the collaborator client context to all loaded modules
         for (FreddyModuleBase module : _modules) {
