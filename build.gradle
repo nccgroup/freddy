@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'net.portswigger.burp.extender:burp-extender-api:1.7.22'
+    compile 'net.portswigger.burp.extender:burp-extender-api:1.7.22'
     testCompile 'junit:junit:4.12'
     testCompile 'org.powermock:powermock-module-junit4:1.7.4'
     testCompile 'org.powermock:powermock-api-mockito2:1.7.4'
