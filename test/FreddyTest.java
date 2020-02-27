@@ -3,6 +3,7 @@ import nb.freddy.Freddy;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.net.MalformedURLException;
@@ -11,10 +12,12 @@ import java.util.Base64;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.endsWith;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore({ "javax.crypto.*"}) //"jdk.internal.reflect.*",
 public class FreddyTest {
     private Freddy freddy;
 
@@ -41,6 +44,9 @@ public class FreddyTest {
         when(callbacks.getHelpers()).thenReturn(helpers);
         when(helpers.analyzeRequest(baseRequestResponse)).thenReturn(requestInfo);
         when(requestInfo.getUrl()).thenReturn(url);
+//        when(callbacks.loadExtensionSetting(any(String.class))).thenReturn("FREDDY");
+        when(callbacks.loadExtensionSetting(endsWith("DECRYPTION_KEY"))).thenReturn("FREDDY");
+        when(callbacks.loadExtensionSetting(endsWith("TESTING"))).thenReturn("FREDDY");
 
         String baseRequest = "GET / HTTP/1.0";
         String baseResponse = "200 OK";

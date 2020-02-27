@@ -95,7 +95,7 @@ public abstract class FreddyModuleBase {
     private SeverityRating _severity;
 
     private long MAXINACTIVETIME = FreddyCollaboratorThread.COLLAB_POLL_INTERVAL * 5;
-    private String _payloadEncryptionKey;
+    private String _payloadEncryptionKey = "FREDDY";
 
     /*******************
      * Default constructor - perform basic initialisation.
