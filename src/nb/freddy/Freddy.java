@@ -299,6 +299,8 @@ public class Freddy implements IScannerCheck, IExtensionStateListener {
         _callbacks.setExtensionName(EXTENSION_NAME + " v" + EXTENSION_VERSION);
         _callbacks.registerScannerCheck(this);
         _callbacks.registerExtensionStateListener(this);
+        //This should not be changed, as all payloads are encrypted with the following key!
+        _callbacks.saveExtensionSetting("DECRYPTION_KEY", "FREDDY");
 
         Log.setLogger(new Log.Logger() {
             @Override

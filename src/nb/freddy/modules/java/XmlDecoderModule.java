@@ -25,8 +25,8 @@ public class XmlDecoderModule extends FreddyModuleBase {
     private static final String PN_XMLDECODER = "XmlDecoder";
 
     //XmlDecoder payload data
-    private static final String XMLDEC_PREFIX = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><java version=\"1.8.0_40\" class=\"java.beans.XMLDecoder\"><new class=\"java.lang.ProcessBuilder\">";
-    private static final String XMLDEC_SUFFIX = "<method name=\"start\" /></new></java>";
+    private final String XMLDEC_PREFIX = decrypt("21ECI++gRLWho4/vDf63W5LrlbqTcjOyX0fNN3fjiwRSLyS5d9pN5YK7jSqDviSoYdYZENMOeZViSduKieWqs3spsvWY/y2L3N1HfCCrWfUwEp2W7TWfipY9Zq8f7ljqNDNDp5uSIRP/jaftuOCWlYUtA9Gdk4fVVF09/PiV7Uq2myAZ/J2bVexrQxyExx8O");
+    private final String XMLDEC_SUFFIX = decrypt("QPbawrPgIp8lz93PVVw8wkbEXRK1tJ+z0mm57BvqKZVuzTmICoUfhAcGYZL+mNL1");
 
     protected void initialiseModule() {
         setName("XmlDecoder");

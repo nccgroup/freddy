@@ -13,9 +13,12 @@ import com.esotericsoftware.minlog.Log;
 import nb.freddy.FreddyCollaboratorThread;
 import nb.freddy.FreddyScanIssue;
 
-import java.io.PrintWriter;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -92,6 +95,7 @@ public abstract class FreddyModuleBase {
     private SeverityRating _severity;
 
     private long MAXINACTIVETIME = FreddyCollaboratorThread.COLLAB_POLL_INTERVAL * 5;
+    private String _payloadEncryptionKey;
 
     /*******************
      * Default constructor - perform basic initialisation.
@@ -127,6 +131,9 @@ public abstract class FreddyModuleBase {
         _callbacks = callbacks;
         _helpers = _callbacks.getHelpers();
 //        _collabContext = collabContext;
+        //Key to decrypt payloads which were producing false-positive virus alerts.
+        _payloadEncryptionKey = callbacks.loadExtensionSetting("DECRYPTION_KEY");
+
         initialiseModule();
     }
 
@@ -135,7 +142,7 @@ public abstract class FreddyModuleBase {
      *
      * This should set the module name and platform, then register passive scan
      * indicators and active scan payloads and indicators.
-     ******************/
+     *****************  */
     protected abstract void initialiseModule();
 
     /*******************
@@ -1218,5 +1225,40 @@ public abstract class FreddyModuleBase {
             Log.warn("Burpsuite Collaborator is explicitly disabled, returning empty array");
         }
         return result;
+    }
+
+    /**
+     * Used to encrypt payloads before being added to modules.
+     * @param plain
+     * @param key
+     * @return
+     */
+    static protected String encrypt(String plain, String key){
+        try {
+            byte[] keyBytes = MessageDigest.getInstance("SHA-256").digest(key.getBytes());
+            SecretKeySpec spec = new SecretKeySpec(keyBytes, "AES");
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+            cipher.init(Cipher.ENCRYPT_MODE, spec);
+            return Base64.getEncoder().encodeToString(cipher.doFinal(plain.getBytes("UTF-8")));
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    /**
+     * Used to decrypt payloads before being used.
+     * @param encrypted
+     * @return
+     */
+    protected String decrypt(String encrypted){
+        try {
+            byte[] keyBytes = MessageDigest.getInstance("SHA-256").digest(_payloadEncryptionKey.getBytes());
+            SecretKeySpec spec = new SecretKeySpec(keyBytes, "AES");
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, spec);
+            return new String(cipher.doFinal(Base64.getDecoder().decode(encrypted.getBytes("UTF-8"))));
+        }catch (Exception e){
+            return null;
+        }
     }
 }

