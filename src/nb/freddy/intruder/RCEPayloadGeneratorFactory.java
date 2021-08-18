@@ -8,6 +8,7 @@
 
 package nb.freddy.intruder;
 
+import burp.IBurpCollaboratorClientContext;
 import burp.IIntruderAttack;
 import burp.IIntruderPayloadGenerator;
 import burp.IIntruderPayloadGeneratorFactory;
@@ -29,14 +30,15 @@ public class RCEPayloadGeneratorFactory implements IIntruderPayloadGeneratorFact
      * Properties
      ******************/
     private final ArrayList<FreddyModuleBase> _modules;
-
+    private final IBurpCollaboratorClientContext _collabContext;
     /*******************
      * Initialise the payload generator factory.
      *
      * @param modules A list of loaded Freddy modules to retrieve payloads from.
      ******************/
-    public RCEPayloadGeneratorFactory(ArrayList<FreddyModuleBase> modules) {
+    public RCEPayloadGeneratorFactory(ArrayList<FreddyModuleBase> modules, IBurpCollaboratorClientContext collabContext) {
         _modules = modules;
+        _collabContext = collabContext;
     }
 
     /*******************
@@ -55,6 +57,6 @@ public class RCEPayloadGeneratorFactory implements IIntruderPayloadGeneratorFact
      * @return An instance of ErrorPayloadGenerator.
      ******************/
     public IIntruderPayloadGenerator createNewInstance(IIntruderAttack attack) {
-        return new RCEPayloadGenerator(_modules, attack);
+        return new RCEPayloadGenerator(_modules, attack,_collabContext);
     }
 }

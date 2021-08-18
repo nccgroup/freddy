@@ -231,12 +231,13 @@ import java.util.List;
 public class Freddy implements IScannerCheck, IExtensionStateListener {
     //Constants
     public static final String EXTENSION_NAME = "Freddy";
-    private static final String EXTENSION_VERSION = "2.2.3";
+    private static final String EXTENSION_VERSION = "2.2.5";
     private static final String[] IGNORE_EXTENSIONS = {".css", ".js", ".jpg", ".jpeg", ".gif", ".png", ".svg", ".ico"};
     //Freddy scanner modules
     private final ArrayList<FreddyModuleBase> _modules;
     //Burp objects
     private IBurpExtenderCallbacks _callbacks;
+    private IBurpCollaboratorClientContext _collabContext;
     private IExtensionHelpers _helpers;
     //Collaborator polling thread
     private FreddyCollaboratorThread _freddyCollaborator;
@@ -318,21 +319,23 @@ public class Freddy implements IScannerCheck, IExtensionStateListener {
             }
         });
         Log.INFO();
-
         //Pass the Burp extender callbacks and the collaborator client context to all loaded modules
         for (FreddyModuleBase module : _modules) {
             module.initialise(_callbacks);
         }
-
+        _collabContext = _callbacks.createBurpCollaboratorClientContext();
         //Register payload generator factories
         _callbacks.registerIntruderPayloadGeneratorFactory(new ErrorPayloadGeneratorFactory(_modules));
-        _callbacks.registerIntruderPayloadGeneratorFactory(new RCEPayloadGeneratorFactory(_modules));
+        _callbacks.registerIntruderPayloadGeneratorFactory(new RCEPayloadGeneratorFactory(_modules,_collabContext));
 
         if (null == _callbacks.loadExtensionSetting("TESTING")) {
             //Start the Collaborator polling thread
-            _freddyCollaborator = new FreddyCollaboratorThread(_callbacks, _modules);
+
+            _freddyCollaborator = new FreddyCollaboratorThread(_callbacks, _modules, _collabContext);
             _freddyCollaborator.start();
         }
+        callbacks.printOutput( "Extension Loaded" );
+
     }
 
     /*******************
