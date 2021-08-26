@@ -70,3 +70,9 @@ The following targets are currently supported (italics are new in v2.0):
 - *XmlSerializer (detection, RCE)*
 
 Released under agpl-3.0, see LICENSE for more information
+
+## Building freddy
+
+Freddy uses the [gradle](https://www.gradle.org) build system. 
+In order to build the jar, you only need to run `gradle jar` in the root. 
+This will run the tests and if everything is correct will create the jar file in the `build/libs` directory.
