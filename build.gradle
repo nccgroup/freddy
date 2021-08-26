@@ -25,7 +25,7 @@ targetCompatibility = 1.11
 sourceSets.main.java.srcDirs = ['src']
 sourceSets.test.java.srcDirs = ['test']
 
-version = '2.2.4'
+version = '2.2.5'
 group 'trust.nccgroup'
 
 jar {
