@@ -26,11 +26,11 @@ import java.util.List;
 public class FreddyCollaboratorThread extends Thread {
     //Interval constants
     private static final long THREAD_SLEEP_INTERVAL = 1000;
-    public static final long COLLAB_POLL_INTERVAL = 60000;
+    public static final long COLLAB_POLL_INTERVAL = 30000;
 
     //Collaborator context object used to poll the server
     private final IBurpExtenderCallbacks _callbacks;
-
+    private final IBurpCollaboratorClientContext _collabContext;
     //All loaded Freddy scanner modules
     private final List<FreddyModuleBase> _modules;
 
@@ -44,8 +44,9 @@ public class FreddyCollaboratorThread extends Thread {
      * @param _callbacks The Collaborator context object from Burp Suite.
      * @param modules A list of all loaded Freddy scanner modules.
      ******************/
-    public FreddyCollaboratorThread(IBurpExtenderCallbacks _callbacks, List<FreddyModuleBase> modules) {
+    public FreddyCollaboratorThread(IBurpExtenderCallbacks _callbacks, List<FreddyModuleBase> modules,IBurpCollaboratorClientContext collabContext) {
         this._callbacks = _callbacks;
+        this._collabContext= collabContext;
         this._modules = modules;
         this._stopFlag = false;
         this._lastPollTime = 0;
@@ -67,9 +68,16 @@ public class FreddyCollaboratorThread extends Thread {
         while (!_stopFlag) {
             if (System.currentTimeMillis() - _lastPollTime > COLLAB_POLL_INTERVAL) {
                 try {
-                    IBurpCollaboratorClientContext _collabContext = _callbacks.createBurpCollaboratorClientContext();
+
+
                     interactions = _collabContext.fetchAllCollaboratorInteractions();
+
                     for (IBurpCollaboratorInteraction interaction : interactions) {
+                        String interactionId = interaction.getProperty("interaction_id");
+                        String interactionRequest = interaction.getProperty("request");
+                        String interactionIp = interaction.getProperty("client_ip");
+
+                        _callbacks.printOutput( "Found Interaction at : " + interactionId +"\n"+ interactionRequest +"\n"+ interactionIp );
                         //Pass the interaction to loaded Freddy scanner modules until one handles it
                         for (FreddyModuleBase _module : _modules) {
                             if (_module.handleCollaboratorInteraction(interaction)) {

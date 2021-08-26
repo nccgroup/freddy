@@ -8,6 +8,7 @@
 
 package nb.freddy.intruder;
 
+import burp.IBurpCollaboratorClientContext;
 import burp.IIntruderAttack;
 import burp.IIntruderPayloadGenerator;
 import nb.freddy.modules.FreddyModuleBase;
@@ -41,13 +42,14 @@ public class RCEPayloadGenerator implements IIntruderPayloadGenerator {
      *
      * @param modules A list of loaded Freddy modules.
      ******************/
-    public RCEPayloadGenerator(ArrayList<FreddyModuleBase> modules, IIntruderAttack attack) {
+    public RCEPayloadGenerator(ArrayList<FreddyModuleBase> modules, IIntruderAttack attack, IBurpCollaboratorClientContext collabContext) {
         List<Payload> modPayloads;
 
         //Generate a list of all RCE detection payloads
         _payloads = new ArrayList<>();
+
         for (FreddyModuleBase module : modules) {
-            modPayloads = module.getRCEPayloads(attack);
+            modPayloads = module.getRCEPayloads(attack,collabContext);
             if (modPayloads != null) {
                 _payloads.addAll(modPayloads);
             }

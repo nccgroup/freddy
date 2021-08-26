@@ -865,11 +865,13 @@ public abstract class FreddyModuleBase {
         //Issue collaborator-based payloads
         if (_rceCapable) {
 //            TODO SB generate new collabContext
-            _collabContext = null;
+            if( _collabContext  == null){
             try {
+                _callbacks.printOutput( "Create context" );
                 _collabContext = _callbacks.createBurpCollaboratorClientContext();
             } catch(IllegalStateException ex) {
                 Log.warn("Collaborator is explicitly disabled, stopping");
+            }
             }
             if( _collabContext  != null) {
                 for (CollaboratorPayload p : _collaboratorPayloads) {
@@ -928,10 +930,14 @@ public abstract class FreddyModuleBase {
      ******************/
     public boolean handleCollaboratorInteraction(IBurpCollaboratorInteraction interaction) {
         String interactionId = interaction.getProperty("interaction_id");
+
+
         boolean result = false;
         Iterator<CollaboratorRecord> iterator = _collabRecords.iterator();
         while (iterator.hasNext()) {
+
             CollaboratorRecord record = iterator.next();
+
             if (record.getCollaboratorId().equals(interactionId)) {
                 try {
                     _callbacks.addScanIssue(createCollaboratorIssue(record, interaction));
@@ -1044,7 +1050,6 @@ public abstract class FreddyModuleBase {
     private IScanIssue createActiveScanExceptionBasedIssue(IHttpRequestResponse baseReqRes, IHttpRequestResponse newReqRes, List<int[]> reqMarkers, List<int[]> resMarkers) {
         String issueDescription;
         String issueRemediation;
-
         //Generate the issue description string
         issueDescription = "A payload was inserted into the HTTP request that would trigger a specific " +
                 "exception if it were deserialized by the <strong>" + _targetName + "</strong> library/API. " +
@@ -1199,10 +1204,10 @@ public abstract class FreddyModuleBase {
         return _exceptionBasedPayloads;
     }
 
-    public ArrayList<Payload> getRCEPayloads(IIntruderAttack attack) {
+    public ArrayList<Payload> getRCEPayloads(IIntruderAttack attack,IBurpCollaboratorClientContext collabContext) {
+        this._collabContext= collabContext;
         ArrayList<Payload> result = new ArrayList<>();
         try {
-            _collabContext = _callbacks.createBurpCollaboratorClientContext();
 
             String collabId = _collabContext.generatePayload(false);
             String host = _collabContext.getCollaboratorServerLocation();
@@ -1221,6 +1226,7 @@ public abstract class FreddyModuleBase {
                 }
                 result.add(p);
             }
+
         } catch (IllegalStateException ex) {
             Log.warn("Burpsuite Collaborator is explicitly disabled, returning empty array");
         }
