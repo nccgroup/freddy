@@ -2,11 +2,12 @@ Uuid: ae1cce0c6d6c47528b4af35faebc3ab3
 ExtensionType: 1
 Name: Freddy, Deserialization Bug Finder
 RepoName: freddy-deserialization-bug-finder
-ScreenVersion: 2.2.2
+ScreenVersion: 2.2.5
 SerialVersion: 3
 MinPlatformVersion: 0
 ProOnly: True
 Author: NCC Group
 ShortDescription: Helps detect and exploit deserialization vulnerabilities in Java and .Net
-EntryPoint: build/libs/freddy-2.2.2.jar
+EntryPoint: build/libs/freddy-2.2.5.jar
 BuildCommand: gradle jar
+SupportedProducts: Pro, Enterprise
